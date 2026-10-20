@@ -647,7 +647,7 @@ def contact_links(email, name, phone=""):
 def build_contact():
     lead = "".join(f'''<li class="person lead">{portrait(n, "white")}<div class="pm"><h3>{n}</h3><p class="rl">{role(t)}</p>{contact_links(e, n, ph)}</div></li>''' for n, t, e, ph in LEADERSHIP)
     cards = []
-    for n, e, t, cs, terms in sorted(FACULTY, key=lambda f: (photo_of(f[0]) is None, f[0].replace("Dr. ", "").split()[-1])):
+    for n, e, t, cs, terms in sorted(FACULTY, key=lambda f: f[0].replace("Dr. ", "").split()[-1]):
         mp = main_path(cs)
         paths = sorted({k for c in cs for k in course_paths(c)} | {mp})
         chips = "".join(f'<li>{course_link(c)}</li>' for c in cs)

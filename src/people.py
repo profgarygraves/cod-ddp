@@ -39,4 +39,7 @@ FACULTY = [
 # Faculty can send theirs; a link appears on their card on the next build.
 LINKEDIN = {
  "ggraves@collegeofthedesert.edu": "garygraves",
+ "mabril@collegeofthedesert.edu": "mari-abril-ed-d-21b9312",
+ "kkay@collegeofthedesert.edu": "kent-kay",
+ "vfountain@collegeofthedesert.edu": "fountainofharp",
 }
