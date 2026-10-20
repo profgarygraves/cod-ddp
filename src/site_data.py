@@ -3,7 +3,12 @@
 from programs import AWARDS, COURSES, JOBS, JOBS_SOURCE, PATHS, ADVISOR, COURSES_URL, KIND
 
 COD = "https://www.collegeofthedesert.edu"
-SCHEDULE = COD + "/students/catalog-schedule/"
+SS = "https://ss.collegeofthedesert.edu/Student/Courses"   # Self-Service class schedule search
+SCHEDULE = SS
+SCHEDULE_DDP = SS + "/Search?subjects=DDP"                   # every DDP course with open sections
+def sched(code): return f"{SS}/Search?keyword=DDP-{code}"      # one course, e.g. DDP-106
+def cat_search(code): return f"https://catalog.collegeofthedesert.edu/search/?search=DDP+{code}"
+SYLLABI = "https://collegeofthedesert.simplesyllabus.com/en-US/syllabus-library"
 CATALOG = "https://catalog.collegeofthedesert.edu/"
 REVIEWED = "Fall 2026"
 
@@ -25,7 +30,7 @@ L = {  # COD services
  "graduation": COD + "/students/admissions/graduation.php",
  "finaid": COD + "/students/fin-aid/",
  "finaid_apply": COD + "/students/fin-aid/applying-for-financial-aid.php",
- "counseling": COD + "/students/counseling/",
+ "counseling": COD + "/students/counseling/default.php",
  "career": COD + "/students/cwsc/",
  "career_fairs": COD + "/students/cwsc/job-career-fair.php",
  "transfer": COD + "/students/transfer-center/",
@@ -181,6 +186,7 @@ def pages(pay_section, course_link):
   <ul class="links">
     <li><a href="{L["award_app"]}"><b>Application for a Degree or Certificate</b><span>Apply in the term you finish your last course.</span></a></li>
     <li><a href="{L["graduation"]}"><b>Graduation</b><span>Deadlines and commencement.</span></a></li>
+    <li><a href="{SYLLABI}"><b>Past syllabi</b><span>Preview any DDP course. Search the library by course code, for example DDP 106.</span></a></li>
     <li><a href="{L["noncredit"]}"><b>Noncredit registration</b><span>For the tuition-free Adobe certificate classes.</span></a></li>
   </ul>
 </div></section>

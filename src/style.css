@@ -301,3 +301,5 @@ body:has(#t-ge:checked) .course:not([data-ge]){display:none}
 .wrap.prose>*{max-width:44rem}
 .phero.c-white{--p-bg:var(--panel);border-bottom:4px solid var(--red)}
 .person p,.links span,.dept-foot p{overflow-wrap:anywhere}
+.course .acts{display:flex;flex-wrap:wrap;gap:.25rem 1.1rem;margin:.6rem 0 0;font-size:.9rem;font-weight:500}
+.course .acts a{display:inline-block;padding:.15rem 0}

@@ -78,7 +78,7 @@ def footer():
   <div class="dept-foot"><div class="wrap">
     <div><h2>Digital Design &amp; Production</h2><p>Questions about a program or a class? Start with the program advisor.</p><p><a href="contact.html">Contact and locations</a></p></div>
     <div><h2>{a["role"]}</h2><p>{a["name"]}</p><p><a href="mailto:{a["email"]}">{a["email"]}</a></p><p>{a["phone"]}</p></div>
-    <div><h2>Find classes</h2><p><a href="{S.SCHEDULE}">Class schedule</a></p><p><a href="{COURSES_URL}">DDP courses in the catalog</a></p><p><a href="courses.html">Course finder</a></p></div>
+    <div><h2>Find classes</h2><p><a href="{S.SCHEDULE_DDP}">DDP classes in the schedule</a></p><p><a href="{S.SYLLABI}">Past syllabi</a></p><p><a href="{COURSES_URL}">DDP courses in the catalog</a></p><p><a href="courses.html">Course finder</a></p></div>
   </div></div>
   <div class="cod-foot"><div class="wrap">
     <div><h2>College of the Desert</h2><p>43-500 Monterey Ave<br>Palm Desert, CA 92260<br>760.346.8041</p></div>
@@ -175,7 +175,7 @@ def build_home():
     <p class="code">DDP 100</p>
     <p class="t">Introduction to Digital Art &amp; Media, 3 units</p>
     <ul class="chips"><li>Transfers to CSU and UC</li><li>COD GE Area A3</li><li>C-ID ARTS 250</li><li>Required for {sum(1 for a in AWARDS.values() if "100" in a["core"])} DDP programs</li></ul>
-    <a class="btn btn-red" href="{S.SCHEDULE}">Find a section</a>
+    <a class="btn btn-red" href="{S.sched("100")}">Find a DDP 100 section</a>
   </div>
 </div></section>
 
@@ -245,7 +245,7 @@ def build_path(p):
     # courses on path (primary path or used by its awards)
     codes = [c for c in COURSES if p["key"] in course_paths(c)]
     rows = "".join(
-        f'<tr><td>{course_link(c)}</td><td>{COURSES[c][0]}</td><td>{"Noncredit" if COURSES[c][1]=="0" else COURSES[c][1]+" units"}</td><td>{COURSES[c][2] or "&nbsp;"}</td></tr>'
+        f'<tr><td>{course_link(c)}</td><td>{COURSES[c][0]}</td><td>{"Noncredit" if COURSES[c][1]=="0" else COURSES[c][1]+" units"}</td><td>{COURSES[c][2] or "&nbsp;"}</td><td><a href="{S.sched(c)}">Sections<span class="sr"> of {ddp(c)}</span></a></td></tr>'
         for c in codes)
     trn = f'<p class="note">{p["transfer_note"]} <a href="transfer.html">How transfer works</a>.</p>' if p.get("transfer_note") else ""
     software_extra = ""
@@ -275,7 +275,7 @@ def build_path(p):
     <p class="code">{sc}</p>
     <p class="t">{st}, {"noncredit" if st_course[1]=="0" else st_course[1]+" units"}</p>
     <ul class="chips"><li>{trtext}</li>{"<li>COD GE Area "+st_course[3]+"</li>" if st_course[3] else ""}</ul>
-    <a class="btn btn-red" href="{S.SCHEDULE}">Find a section</a>
+    <a class="btn btn-red" href="{S.sched(start_code)}">Find a {sc} section</a>
   </div>
 </div></section>
 
@@ -290,9 +290,9 @@ def build_path(p):
 
 <section class="tight" aria-labelledby="crs-h"><div class="wrap">
   <h2 class="h2" id="crs-h">Courses on this path</h2>
-  <p class="sub">Every DDP course used by these programs. Select a course for its description, or use the <a href="courses.html">course finder</a>.</p>
+  <p class="sub">Every DDP course used by these programs. Select a course for its description, or use the <a href="courses.html">course finder</a>. Preview a course in the <a href="{S.SYLLABI}">syllabus library</a>.</p>
   <table class="list"><caption class="sr">DDP courses for {strip(p["name"])}</caption>
-    <thead><tr><th scope="col">Course</th><th scope="col">Title</th><th scope="col">Units</th><th scope="col">Transfers to</th></tr></thead>
+    <thead><tr><th scope="col">Course</th><th scope="col">Title</th><th scope="col">Units</th><th scope="col">Transfers to</th><th scope="col"><span class="sr">Class schedule</span></th></tr></thead>
     <tbody>{rows}</tbody></table>
 </div></section>
 
@@ -332,15 +332,17 @@ def build_courses():
   <p>{blurb}</p>
   <p class="meta">{"".join(f"<span>{m}</span>" for m in meta)}</p>
   {used_html}
+  <p class="acts"><a href="{S.sched(c)}">Find sections<span class="sr"> of {ddp(c)}</span></a><a href="{S.cat_search(c)}">Catalog entry<span class="sr"> for {ddp(c)}</span></a></p>
 </li>''')
     popts = [("all", "All areas")] + [(p["key"], strip(p["name"]).replace("Job-ready software skills", "Noncredit software")) for p in PATHS] + [("career", "Career &amp; portfolio")]
     pr = "".join(f'<input type="radio" name="area" id="f-{k}" value="{k}"{" checked" if k=="all" else ""}><label for="f-{k}">{n}</label>' for k, n in popts)
     tr = "".join(f'<input type="radio" name="tr" id="t-{k}" value="{k}"{" checked" if k=="any" else ""}><label for="t-{k}">{n}</label>' for k, n in
                  [("any", "Any"), ("csu", "Transfers to CSU"), ("uc", "Transfers to UC"), ("ge", "Counts for COD GE")])
-    body = f'''{simple_hero("Course finder", f"All {len(COURSES)} DDP courses in the 2026-2027 catalog. Filter by career path or by transfer. Class times and sections are in the class schedule.", [("Home","index.html"),("Courses",None)])}
+    body = f'''{simple_hero("Course finder", f"All {len(COURSES)} DDP courses in the 2026-2027 catalog. Filter by career path or by transfer, then find open sections in the class schedule.", [("Home","index.html"),("Courses",None)])}
 <section><div class="wrap">
   <fieldset class="filters"><legend>Career path</legend><div class="opts">{pr}</div></fieldset>
   <fieldset class="filters"><legend>Transfer and general education</legend><div class="opts">{tr}</div></fieldset>
+  <p class="count">Want to see what a class covers before you enroll? Read past syllabi in the <a href="{S.SYLLABI}">COD syllabus library</a>; search by course code. Or <a href="{S.SCHEDULE_DDP}">see every DDP class this term</a>.</p>
   <ul class="courses" aria-label="DDP courses">{"".join(items)}</ul>
   <p class="src">Source: <a href="{COURSES_URL}">College of the Desert 2026-2027 Catalog, Digital Design &amp; Production courses</a>. Descriptions are shortened; the catalog lists prerequisites, advisories, and hours.</p>
 </div></section>'''

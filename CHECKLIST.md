@@ -24,6 +24,13 @@ Last updated: October 20, 2026. Check items off as they are confirmed.
 - [ ] Gary Graves: COD email for the Contact page
 - [ ] Spanish version of every page (next phase)
 
+## Links added October 20 (from Gary)
+- [x] Class schedule: Self-Service search. Each course links to its own search (keyword=DDP-106); all DDP classes use subjects=DDP
+- [x] Counseling: /students/counseling/default.php
+- [x] Catalog search per course (catalog.collegeofthedesert.edu/search/?search=DDP+106)
+- [x] Syllabus library (Simple Syllabus). Its search is not in the URL, so pages link to the library and tell students to search by course code
+- [ ] Ask COD web staff to replace or redirect the old DDP page (still lists Flash and ActionScript): collegeofthedesert.edu/students/acad-prog/social-science-art/arts/digital-design-and-production.php
+
 ## People and places
 - [ ] Program advisor: Mari Abril, mabril@collegeofthedesert.edu, 760.674.5684 (from the 2026-2027 catalog)
 - [ ] Faculty list for the Faculty page: names, areas, emails, photos
