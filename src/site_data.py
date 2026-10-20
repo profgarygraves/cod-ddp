@@ -19,7 +19,8 @@ TOP_LINKS = [("Apply", COD + "/students/admissions/"), ("Class Schedule", SCHEDU
              ("Catalog", CATALOG), ("Syllabi", SYLLABI), ("Financial Aid", COD + "/students/fin-aid/")]
 
 NAV = [("programs", "Programs", "programs.html"), ("start", "Get Started", "get-started.html"),
-       ("work", "Student Work", "student-work.html"), ("contact", "Contact", "contact.html")]
+       ("work", "Student Work", "student-work.html"), ("faculty", "Faculty &amp; Staff", "faculty.html"),
+       ("contact", "Contact", "contact.html")]
 
 # Second-level links shown on the Programs, Course finder, Careers, and Transfer pages
 SUBNAV = [("programs.html", "All programs"), ("courses.html", "Course finder"),
@@ -233,8 +234,11 @@ def pages(pay_section, course_link, jobs_table):
       lede="Questions about a program, a class, or your portfolio? Start with the program advisor.",
       body=f'''<section><div class="wrap">
   <h2 class="h2">People</h2>
-  <ul class="people">{people}</ul>
-  <p class="note">More faculty profiles are coming. <span class="ph">(Department to supply the full faculty list.)</span></p>
+  <ul class="links">
+    <li><a href="mailto:{ADVISOR["email"]}"><b>{ADVISOR["name"]}, Program Advisor</b><span>Programs, classes, and portfolios. {ADVISOR["email"]}, {ADVISOR["phone"]}</span></a></li>
+    <li><a href="faculty.html"><b>Faculty &amp; Staff</b><span>All DDP instructors, the department chair, and the dean&#39;s office.</span></a></li>
+    <li><a href="mailto:ggraves@collegeofthedesert.edu"><b>Gary Graves, Gallery Curator</b><span>Submit student work for the gallery. ggraves@collegeofthedesert.edu</span></a></li>
+  </ul>
 </div></section>
 <section class="pay-wrap"><div class="wrap">
   <h2 class="h2">Where DDP classes meet</h2>

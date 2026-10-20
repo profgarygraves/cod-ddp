@@ -38,13 +38,16 @@ Last updated: October 20, 2026. Check items off as they are confirmed.
 
 ## People and places
 - [ ] Program advisor: Mari Abril, mabril@collegeofthedesert.edu, 760.674.5684 (from the 2026-2027 catalog)
-- [ ] Faculty list for the Faculty page: names, areas, emails, photos
+- [x] Faculty & Staff page (October 20): 19 instructors from the Spring, Summer, and Fall 2026 class schedule; titles and emails from the COD directory; Dean Vanessa Fountain, Chair Dr. Mari Abril, and Tina Gonzalez from the School of Social Sciences and Arts page
+- [ ] Faculty headshots (600x750, docs/img/people/first-last.jpg) and LinkedIn links (src/people.py LINKEDIN)
+- [ ] Confirm faculty who taught only in Spring or Summer 2026 should stay listed: Aaron Baldon, John Goodwin, Kent Kay, Jonathan Gorges
+- [ ] Denise Ferraccioli's directory email is dreilley@collegeofthedesert.edu; confirm
 - [ ] Department office, labs, and campus locations (Palm Desert, Palm Springs temporary campus)
 - [ ] Counselors who work with DDP students
 - [ ] Department social media accounts
 
 ## Content to gather
-- [ ] 10-20 pieces of student work with signed releases (needed for Direction B, useful for all)
+- [ ] 10-20 pieces of student work with signed releases. Add each to src/work.py and docs/img/work/ (instructions at the top of work.py)
 - [ ] Pay data for photographers and film and video editors (BLS request limit reached October 20; add next pass)
 - [ ] Palm Springs campus: link to an official COD campus page when one exists
 - [ ] Software access for students (Adobe Creative Cloud licenses, lab hours)

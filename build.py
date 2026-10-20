@@ -10,13 +10,15 @@ ROOT = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(ROOT, "src"))
 from programs import PATHS, AWARDS, KIND, COURSES, JOBS, JOBS_SOURCE, ADVISOR, COURSES_URL, CAREERS, EDU
 import site_data as S
+from people import LEADERSHIP, FACULTY, LINKEDIN
+from work import WORKS
 
 OUT = os.path.join(ROOT, "docs")
 PBY = {p["key"]: p for p in PATHS}
 AWARD_PATH = {a: p["key"] for p in PATHS for a in p["awards"]}
 
 def esc_attr(s): return s.replace('"', "&quot;")
-def strip(s): return re.sub(r"<[^>]+>", "", s).replace("&amp;", "&")
+def strip(s): return re.sub(r"<[^>]+>", "", s)
 
 def ddp(code):  return f"DDP {code}"
 def cid(code):  return "ddp-" + code.lower()
@@ -173,7 +175,7 @@ def tile(p, cls):
     jobs = p["jobs"] if p["key"] != "software" else "Adobe Certified skills in Photoshop, Illustrator, InDesign, Premiere Pro, and After Effects. Noncredit, no experience needed."
     fl = FLOWER
     uniq = f'<p class="unique">Only one in California. Online.</p>' if p.get("unique") else ""
-    return (f'<li class="{cls} c-{p["color"]}">{fl}<div><h2><a href="{p["file"]}">{p["name"]}</a>{free}</h2>'
+    return (f'<li class="{cls} c-{p["color"]}">{fl}<div><h3><a href="{p["file"]}">{p["name"]}</a>{free}</h3>'
             f'<p class="jobs">{jobs}</p>{wage}{extra}{uniq}</div>'
             f'<p class="start"><span>Start with <b>{p["start"][0]}</b></span><span>{count_awards(p["awards"])}</span></p></li>')
 
@@ -234,7 +236,7 @@ def tools(code=None, label=""):
     sch = S.sched(code) if code else S.SCHEDULE_DDP
     who = f" for {ddp(code)}" if code else ""
     find = f"Search for &ldquo;{ddp(code)}&rdquo;." if code else "Search by course code, like &ldquo;DDP 100&rdquo;."
-    return f'''<ul class="ctools"{f' aria-label="{label}"' if label else ""}>
+    return f'''<ul class="ctools">
   <li><a href="{cat}"><span class="ic">{ICON["catalog"]}</span><b>Catalog<span class="sr">{who}</span></b><span>Official description, units, and requirements</span></a></li>
   <li><a href="{sch}"><span class="ic">{ICON["schedule"]}</span><b>Class schedule<span class="sr">{who}</span></b><span>Days, times, online sections, and registration</span></a></li>
   <li><a href="{S.SYLLABI}"><span class="ic">{ICON["syllabus"]}</span><b>Syllabus library<span class="sr">{who}</span></b><span>What past classes covered. {find}</span></a></li>
@@ -278,7 +280,7 @@ def ksa_block(k, open_=False):
     a = AWARDS[k]; q = KSA[k]
     col = lambda h, d, items: f'<div><h4>{h}</h4><p class="d">{d}</p><ul class="ticks">' + "".join(f"<li>{i}</li>" for i in items) + "</ul></div>"
     return f'''<details class="ksa" id="ksa-{k}"{" open" if open_ else ""}>
-  <summary><span class="k">{a["kind"] if a["kind"] != "CC" else "Noncredit"}</span>{a["name"]}</summary>
+  <summary><span class="k">{a["kind"] if a["kind"] != "CC" else "Noncredit"}</span><h3>{a["name"]}</h3></summary>
   <div class="kgrid">
     {col("Knowledge", "What you&#39;ll understand", q["k"])}
     {col("Skills", "What you&#39;ll be able to do", q["s"])}
@@ -443,14 +445,14 @@ def build_programs():
     <p>{p["pitch"]}</p>
     <p class="meta"><span>Start with <b>{p["start"][0]}</b></span><span>{count_awards(p["awards"])}</span></p>
   </div>
-  <ul class="aw" aria-label="Degrees and certificates in {strip(p["name"])}">{aw}</ul>
+  <ul class="aw">{aw}</ul>
 </li>''')
     key = "".join(f"<li><b>{k}</b> {v}</li>" for k, v in [("AA / AS", "Associate degree"), ("CA", "Certificate of Achievement"), ("Noncredit", "Certificate of Completion, tuition-free")])
     body = simple_hero("Programs", f"Six career paths and {len(AWARDS)} degrees and certificates. Pick a path to see its programs, courses, careers, and transfer options.",
                        [("Home", "index.html"), ("Programs", None)], "programs.html") + f'''
 <section><div class="wrap">
   <ul class="progs">{"".join(rows)}</ul>
-  <ul class="key" aria-label="Award types">{key}</ul>
+  <ul class="key">{key}</ul>
 </div></section>
 <section class="pay-wrap"><div class="wrap">
   <h2 class="h2">Not sure where to start?</h2>
@@ -494,10 +496,131 @@ def build_courses():
   <fieldset class="filters"><legend>Career path</legend><div class="opts">{pr}</div></fieldset>
   <fieldset class="filters"><legend>Transfer and general education</legend><div class="opts">{tr}</div></fieldset>
   {tools(None, "Class tools")}
-  <ul class="courses" aria-label="DDP courses">{"".join(items)}</ul>
+  <ul class="courses">{"".join(items)}</ul>
   <p class="src">Source: <a href="{COURSES_URL}">College of the Desert 2026-2027 Catalog, Digital Design &amp; Production courses</a>. Descriptions are shortened; the catalog lists prerequisites, advisories, and hours.</p>
 </div></section>'''
     return page("courses.html", "Course finder", body, "programs", "Find DDP courses by career path, transfer, and general education.")
+
+
+# ---------------------------------------------------------------------------
+# Faculty & Staff
+LI_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true" width="16" height="16"><path fill="currentColor" d="M4.98 3.5A2.5 2.5 0 1 1 5 8.5a2.5 2.5 0 0 1-.02-5zM3 9.75h4V21H3zM9.5 9.75h3.83v1.54h.06c.53-1 1.84-2.06 3.79-2.06 4.05 0 4.8 2.66 4.8 6.13V21h-4v-4.9c0-1.17-.02-2.67-1.63-2.67-1.63 0-1.88 1.27-1.88 2.59V21h-4z"/></svg>'
+
+def person_slug(n): return re.sub(r"[^a-z]+", "-", n.lower().replace("dr. ", "")).strip("-")
+def initials2(n): return "".join(w[0] for w in n.replace("Dr. ", "").split()[:2])
+def photo_of(n):
+    f = f"img/people/{person_slug(n)}.jpg"
+    return f if os.path.exists(os.path.join(OUT, f)) else None
+
+def main_path(courses):
+    cnt = {}
+    for c in courses:
+        k = COURSES[c][4]
+        if k in PBY: cnt[k] = cnt.get(k, 0) + 1
+    return max(cnt, key=cnt.get) if cnt else "design"
+
+def portrait(name, color):
+    src = photo_of(name)
+    if src: return f'<div class="ph c-{color}"><img src="{src}" alt="" loading="lazy" width="600" height="750"></div>'
+    return f'<div class="ph c-{color}" aria-hidden="true"><span>{initials2(name)}</span></div>'
+
+def contact_links(email, phone=""):
+    li = LINKEDIN.get(email)
+    out = f'<a href="mailto:{email}">{email}</a>'
+    if phone: out += f'<span>{phone}</span>'
+    if li: out += f'<a class="li" href="https://www.linkedin.com/in/{li}/">{LI_ICON}LinkedIn</a>'
+    return f'<p class="ct">{out}</p>'
+
+def build_faculty():
+    lead = "".join(f'''<li class="person lead">{portrait(n, "white")}<div class="pm"><h3>{n}</h3><p class="rl">{t}</p>{contact_links(e, ph)}</div></li>''' for n, t, e, ph in LEADERSHIP)
+    cards = []
+    for n, e, t, cs, terms in sorted(FACULTY, key=lambda f: (photo_of(f[0]) is None, f[0].replace("Dr. ", "").split()[-1])):
+        mp = main_path(cs)
+        paths = sorted({k for c in cs for k in course_paths(c)} | {mp})
+        chips = "".join(f'<li>{course_link(c)}</li>' for c in cs)
+        cards.append(f'''<li class="person" data-path="{" ".join(paths)}">{portrait(n, PBY[mp]["color"])}<div class="pm">
+  <h3>{n}</h3><p class="rl">{t}</p>
+  <p class="tc">Teaches</p><ul class="chips">{chips}</ul>
+  {contact_links(e)}
+</div></li>''')
+    opts = [("all", "All faculty")] + [(p["key"], strip(p["name"])) for p in PATHS]
+    radios = "".join(f'<input type="radio" name="fp" id="fp-{k}"{" checked" if k=="all" else ""}><label for="fp-{k}">{v}</label>' for k, v in opts)
+    hide = ",\n".join(f'body:has(#fp-{k}:checked) .people.fac .person:not([data-path~="{k}"])' for k, _ in opts[1:])
+    body = simple_hero("Faculty &amp; Staff", f"Meet the {len(FACULTY)} instructors who taught Digital Design &amp; Production courses in 2026, plus the department and school leaders who can help you.",
+                       [("Home", "index.html"), ("Faculty &amp; Staff", None)]) + f'''
+<style>{hide}{{display:none}}</style>
+<section aria-labelledby="ld-h"><div class="wrap">
+  <h2 class="h2" id="ld-h">Department and school leadership</h2>
+  <ul class="people leads">{lead}</ul>
+</div></section>
+<section class="pay-wrap" aria-labelledby="fac-h"><div class="wrap">
+  <h2 class="h2" id="fac-h">Faculty</h2>
+  <p class="sub">Our instructors work as designers, photographers, animators, and developers. Filter by program to see who teaches what. Select a course to read about it.</p>
+  <fieldset class="filters"><legend>Show faculty who teach</legend><div class="opts">{radios}</div></fieldset>
+  <ul class="people fac">{"".join(cards)}</ul>
+  <p class="src">Instructors who taught DDP sections in Spring, Summer, or Fall 2026, from the class schedule. Titles and emails from the College of the Desert directory. Faculty: send a headshot or LinkedIn link to <a href="mailto:ggraves@collegeofthedesert.edu">ggraves@collegeofthedesert.edu</a> to add it.</p>
+</div></section>'''
+    return page("faculty.html", "Faculty &amp; Staff", body, "faculty", "Faculty and staff of Digital Design &amp; Production at College of the Desert.")
+
+# ---------------------------------------------------------------------------
+# Student work gallery
+ART = {
+ "poster": '<rect width="400" height="400" fill="#A30E22"/><circle cx="300" cy="120" r="120" fill="#FFC423"/><text x="40" y="270" font-family="Jost,sans-serif" font-weight="600" font-size="54" fill="#fff">desert</text><text x="40" y="318" font-family="Jost,sans-serif" font-weight="600" font-size="54" fill="#fff">x film fest</text><rect x="40" y="340" width="120" height="6" fill="#FFC423"/>',
+ "dusk": '<defs><linearGradient id="gd" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3b2a5a"/><stop offset=".45" stop-color="#e98b6a"/><stop offset=".62" stop-color="#f6c58e"/></linearGradient></defs><rect width="400" height="400" fill="url(#gd)"/><path d="M0 270 L80 220 L150 250 L240 200 L330 245 L400 225 L400 400 L0 400Z" fill="#2c2433"/><path d="M250 400 V250 M250 290 l-30 -26 M250 280 l26 -30 M220 264 l-8 -16 M276 250 l10 -14" stroke="#1a1520" stroke-width="9" stroke-linecap="round" fill="none"/>',
+ "motion": '<rect width="400" height="400" fill="#16181b"/><g fill="#FFC423">' + "".join(f'<rect x="{30+i*44}" y="170" width="30" height="{40+ (i%3)*14}" rx="3"/>' for i in range(8)) + '</g><rect x="30" y="300" width="340" height="4" fill="#3b3f45"/><rect x="30" y="300" width="150" height="4" fill="#fff"/><circle cx="180" cy="302" r="8" fill="#fff"/>',
+ "ui": '<rect width="400" height="400" fill="#efeee9"/><rect x="110" y="30" width="180" height="340" rx="26" fill="#fff" stroke="#1D2125" stroke-width="6"/><rect x="128" y="62" width="144" height="110" rx="10" fill="#103355"/><path d="M140 150 l30 -40 l26 26 l20 -16 l40 30z" fill="#FFC423"/><rect x="128" y="186" width="144" height="14" rx="7" fill="#d9d6cf"/><rect x="128" y="210" width="100" height="14" rx="7" fill="#d9d6cf"/><rect x="128" y="300" width="144" height="40" rx="20" fill="#A30E22"/>',
+ "type": '<rect width="400" height="400" fill="#e9e3d6"/><text x="200" y="270" text-anchor="middle" font-family="Jost,sans-serif" font-weight="300" font-size="210" fill="#103355">Ag</text><text x="200" y="340" text-anchor="middle" font-family="Jost,sans-serif" font-size="22" letter-spacing="6" fill="#103355">MOJAVE SANS</text>',
+ "sphere": '<defs><radialGradient id="gb" cx=".35" cy=".3"><stop offset="0" stop-color="#c8d4e0"/><stop offset=".6" stop-color="#4c6178"/><stop offset="1" stop-color="#1f2a36"/></radialGradient><radialGradient id="gs" cx=".35" cy=".3"><stop offset="0" stop-color="#fff"/><stop offset=".15" stop-color="#FFC423"/><stop offset="1" stop-color="#8a5f05"/></radialGradient></defs><rect width="400" height="400" fill="url(#gb)"/><ellipse cx="200" cy="320" rx="110" ry="18" fill="#000" opacity=".35"/><circle cx="200" cy="200" r="105" fill="url(#gs)"/>',
+ "aerial": '<rect width="400" height="400" fill="#b89a6a"/>' + "".join(f'<circle cx="{25+c*50}" cy="{25+r*50}" r="16" fill="#3f5a1e"/><circle cx="{25+c*50}" cy="{25+r*50}" r="7" fill="#6e8b3d"/>' for r in range(8) for c in range(8)) + '<rect x="0" y="182" width="400" height="18" fill="#e3d2ae"/>',
+ "package": '<rect width="400" height="400" fill="#f3efe6"/><path d="M120 110 L200 70 L280 110 L280 320 L200 360 L120 320Z" fill="#5B3F8C"/><path d="M200 150 L280 110 L280 320 L200 360Z" fill="#46306d"/><path d="M120 110 L200 150 L280 110 L200 70Z" fill="#7a5bb0"/><rect x="138" y="190" width="48" height="90" fill="#FFC423"/><text x="162" y="242" text-anchor="middle" font-family="Jost,sans-serif" font-size="16" font-weight="600" fill="#3a2a00" transform="rotate(-90 162 236)">AGAVE</text>',
+ "game": '<rect width="400" height="400" fill="#7fc6e6"/><circle cx="320" cy="80" r="34" fill="#FFC423"/><rect y="280" width="400" height="120" fill="#c98b3f"/>' + "".join(f'<rect x="{i*40}" y="280" width="40" height="16" fill="#3f5a1e"/>' for i in range(0,10,2)) + '<rect x="90" y="230" width="44" height="50" fill="#5b3a1e"/><rect x="100" y="214" width="32" height="20" fill="#5b3a1e"/><rect x="124" y="208" width="18" height="10" fill="#A30E22"/><rect x="250" y="210" width="40" height="70" fill="#3f5a1e"/><rect x="236" y="230" width="14" height="30" fill="#3f5a1e"/>',
+ "access": '<rect width="400" height="400" fill="#fff"/><rect x="0" y="0" width="400" height="120" fill="#103355"/><text x="30" y="80" font-family="Jost,sans-serif" font-weight="600" font-size="44" fill="#fff">Open House</text><text x="30" y="180" font-family="Roboto,sans-serif" font-size="26" fill="#1D2125">Saturday, 10 a.m.</text><text x="30" y="220" font-family="Roboto,sans-serif" font-size="26" fill="#1D2125">Room 101, ramp entrance</text><circle cx="330" cy="310" r="46" fill="none" stroke="#103355" stroke-width="8"/><circle cx="330" cy="290" r="9" fill="#103355"/><path d="M330 302 v28 M312 312 h36 M330 330 l-12 22 M330 330 l12 22" stroke="#103355" stroke-width="7" stroke-linecap="round"/>',
+ "portrait": '<rect width="400" height="400" fill="#2b2f33"/><circle cx="200" cy="165" r="78" fill="#c99272"/><path d="M80 400 C80 290 320 290 320 400Z" fill="#A30E22"/><path d="M122 160 C122 80 278 80 278 160 C262 120 140 120 122 160Z" fill="#1d1a17"/><rect width="400" height="400" fill="url(#none)" opacity="0"/>',
+ "social": '<rect width="400" height="400" fill="#3F5A1E"/><text x="36" y="150" font-family="Jost,sans-serif" font-weight="600" font-size="64" fill="#FFC423">Join the</text><text x="36" y="220" font-family="Jost,sans-serif" font-weight="600" font-size="64" fill="#fff">cleanup.</text><text x="36" y="300" font-family="Roboto,sans-serif" font-size="22" fill="#fff">Whitewater Preserve, Saturday</text><circle cx="340" cy="340" r="30" fill="#FFC423"/>',
+}
+
+def work_art(w):
+    if w.get("img"):
+        return f'<img src="img/work/{w["img"]}" alt="{esc_attr(w["alt"])}" loading="lazy">'
+    return (f'<svg viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Placeholder artwork for {strip(w["title"])}">{ART[w["art"]]}</svg>'
+            '<span class="ph-tag">Placeholder</span>')
+
+def build_work():
+    items = []
+    for w in WORKS:
+        c = w["course"]
+        items.append(f'''<li class="piece s-{w["shape"]}" data-path="{w["path"]}"><figure>
+  <div class="art">{work_art(w)}</div>
+  <figcaption><b>{w["student"]}</b><i>{w["title"]}</i>, {w["year"]}<br>{w["medium"]}<br>{course_link(c)} {COURSES[c][0]}</figcaption>
+</figure></li>''')
+    opts = [("all", "All work")] + [(p["key"], strip(p["name"])) for p in PATHS]
+    radios = "".join(f'<input type="radio" name="wp" id="wp-{k}"{" checked" if k=="all" else ""}><label for="wp-{k}">{v}</label>' for k, v in opts)
+    hide = ",\n".join(f'body:has(#wp-{k}:checked) .gallery .piece:not([data-path="{k}"])' for k, _ in opts[1:])
+    body = f'''<style>{hide}{{display:none}}</style>
+<div class="ghero"><div class="wrap">
+  {crumbs([("Home", "index.html"), ("Student Work", None)])}
+  <h1>Student Work</h1>
+  <p class="lede">Posters, photographs, animation, apps, games, and type, made in Digital Design &amp; Production classes. Every piece started as a first sketch.</p>
+</div></div>
+<section class="gwall" aria-labelledby="gal-h"><div class="wrap">
+  <h2 class="sr" id="gal-h">Gallery</h2>
+  <p class="note">The pieces shown are placeholders. Real student work will hang here once students give written permission.</p>
+  <fieldset class="filters"><legend>Show work from</legend><div class="opts">{radios}</div></fieldset>
+  <ul class="gallery">{"".join(items)}</ul>
+</div></section>
+<section aria-labelledby="show-h"><div class="wrap">
+  <h2 class="h2" id="show-h">Show your work</h2>
+  <p class="sub">Your work could hang here. Here is how to submit a finished piece.</p>
+  <ol class="steps">
+    <li><h3>Pick your best piece</h3><p>A finished project from any DDP class: poster, photo, video, animation, app, game, or type.</p></li>
+    <li><h3>Ask your instructor</h3><p>Your instructor can nominate it, or you can submit it yourself.</p></li>
+    <li><h3>Sign a release</h3><p>We need your written permission before anything is posted. You choose how your name appears.</p></li>
+    <li><h3>Send it to the curator</h3><p>Email the file, title, course, and a one-line description to the gallery curator.</p></li>
+  </ol>
+  <p style="margin-top:2rem"><a class="btn btn-red" href="mailto:ggraves@collegeofthedesert.edu?subject=Student%20work%20submission">Email the gallery curator, Prof. Gary Graves</a></p>
+  <p class="src">In {course_link("128")} Portfolio Preparation, students also design and run a public exhibition of student work.</p>
+</div></section>'''
+    return page("student-work.html", "Student Work", body, "work", "Student work from Digital Design &amp; Production at College of the Desert.")
 
 # ---------------------------------------------------------------------------
 def build_content(pg):
@@ -510,9 +633,10 @@ def build_content(pg):
 
 def build():
     shutil.copy(os.path.join(ROOT, "src", "style.css"), os.path.join(OUT, "css", "style.css"))
-    made = [build_home(), build_programs(), build_courses()]
+    made = [build_home(), build_programs(), build_courses(), build_faculty(), build_work()]
     made += [build_path(p) for p in PATHS]
     for pg in S.pages(pay_section, course_link, jobs_table):
+        if pg["file"] == "student-work.html": continue
         made.append(build_content(pg))
     print(f"Built {len(made)} pages:", ", ".join(made))
 
