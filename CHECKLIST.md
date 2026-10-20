@@ -2,6 +2,16 @@
 
 Last updated: October 20, 2026. Check items off as they are confirmed.
 
+## Final audit (October 20, before review)
+- [x] Faculty filter uses each course's home program (catalog); filter buttons only for programs with 2026 instructors
+- [x] All 34 pages: internal links and anchors, HTML validation, one h1 and no skipped headings, image alt text
+- [x] External links: 66 catalog pages and course searches, 23 COD pages, Self-Service, Simple Syllabus, Handshake (checked in Chrome)
+- [x] axe-core WCAG 2.2 AA: light, dark, and both forced themes, desktop and phone
+- [x] No sideways scrolling at 320, 768, 1024, and 1920 px, and with WCAG text-spacing overrides at 320 px
+- [x] Keyboard: skip link first on every page; visible focus on every stop; filters work with arrow keys
+- [x] Touch targets 24 px or larger; reduced motion honored; filters and theme switch work with JavaScript off
+- [ ] Still worth doing by a person: a screen reader pass (VoiceOver or NVDA) and a real-phone check
+
 ## Decisions for Gary
 - [x] Faculty & Staff and Contact combined into one page, "Faculty, Staff & Contact" (contact.html); faculty.html forwards there (October 20)
 - [x] Web gallery is named the "DDP Online Gallery"; Gary is listed for "Submit student work for the DDP Online Gallery" (October 20)

@@ -610,6 +610,7 @@ def build_courses():
   <fieldset class="filters"><legend>{T("Career path", "Trayectoria profesional")}</legend><div class="opts">{pr}</div></fieldset>
   <fieldset class="filters"><legend>{T("Transfer and general education", "Transferencia y educación general")}</legend><div class="opts">{tr}</div></fieldset>
   {tools(None)}
+  <h2 class="sr">{T("Courses", "Cursos")}</h2>
   <ul class="courses">{"".join(items)}</ul>
   <p class="src">{T("Source", "Fuente")}: <a href="{COURSES_URL}">College of the Desert 2026-2027 Catalog, Digital Design &amp; Production courses</a>. {T("Descriptions are shortened; the catalog lists prerequisites, advisories, and hours.", "Las descripciones son breves; el catálogo indica requisitos previos, recomendaciones y horas. Los títulos oficiales de los cursos están en inglés.")}</p>
 </div></section>'''
@@ -649,14 +650,15 @@ def build_contact():
     cards = []
     for n, e, t, cs, terms in sorted(FACULTY, key=lambda f: f[0].replace("Dr. ", "").split()[-1]):
         mp = main_path(cs)
-        paths = sorted({k for c in cs for k in course_paths(c)} | {mp})
+        paths = sorted({COURSES[c][4] for c in cs if COURSES[c][4] in PBY} | {mp})
         chips = "".join(f'<li>{course_link(c)}</li>' for c in cs)
         cards.append(f'''<li class="person" data-path="{" ".join(paths)}">{portrait(n, PBY[mp]["color"])}<div class="pm">
   <h3>{n}</h3><p class="rl">{role(t)}</p>
   <p class="tc">{T("Teaches", "Enseña")}</p><ul class="chips">{chips}</ul>
   {contact_links(e, n)}
 </div></li>''')
-    opts = [("all", T("All faculty", "Todos los docentes"))] + [(p["key"], strip(pn(p))) for p in PATHS]
+    taught = {COURSES[c][4] for f in FACULTY for c in f[3]} | {main_path(f[3]) for f in FACULTY}
+    opts = [("all", T("All faculty", "Todos los docentes"))] + [(p["key"], strip(pn(p))) for p in PATHS if p["key"] in taught]
     radios = "".join(f'<input type="radio" name="fp" id="fp-{k}"{" checked" if k=="all" else ""}><label for="fp-{k}">{v}</label>' for k, v in opts)
     hide = ",\n".join(f'body:has(#fp-{k}:checked) .people.fac .person:not([data-path~="{k}"])' for k, _ in opts[1:])
     title = T("Faculty, Staff &amp; Contact", "Docentes, personal y contacto")

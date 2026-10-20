@@ -144,6 +144,7 @@ def pages(pay_section, course_link, jobs_table):
     out.append(dict(file="get-started.html", section="start", title="Get started",
       lede="From your first class to a finished certificate, in four steps. New to college? You belong here.",
       body=f'''<section><div class="wrap">
+  <h2 class="sr">Four steps</h2>
   <ol class="steps v">{steps}</ol>
 </div></section>
 <section class="tight"><div class="wrap two">
@@ -254,7 +255,7 @@ def pages(pay_section, course_link, jobs_table):
 </div></section>'''))
 
     # ---------------- Accessibility ----------------
-    out.append(dict(file="accessibility.html", section=None, title="Accessibility",
+    out.append(dict(file="accessibility.html", section=None, title="Accessibility statement",
       lede="This site is built so everyone can use it.",
       body=f'''<section><div class="wrap prose">
   <p>The Digital Design &amp; Production website is designed to meet the Web Content Accessibility Guidelines (WCAG) 2.2, Level AA. Every page is checked with automated tests in light and dark modes, at desktop and phone sizes, and by keyboard.</p>
