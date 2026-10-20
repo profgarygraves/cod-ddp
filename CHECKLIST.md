@@ -3,6 +3,8 @@
 Last updated: October 20, 2026. Check items off as they are confirmed.
 
 ## Decisions for Gary
+- [x] Faculty & Staff and Contact combined into one page, "Faculty, Staff & Contact" (contact.html); faculty.html forwards there (October 20)
+- [x] Web gallery is named the "DDP Online Gallery"; Gary is listed for "Submit student work for the DDP Online Gallery" (October 20)
 - [x] Navigation simplified (October 20): Programs, Get Started, Student Work, Contact. Course finder, Careers, and Transfer live under Programs; each program page has its own Courses, Careers, and Transfer sections.
 - [x] Program titles in Title Case (October 20)
 - [x] Homepage direction: C, Creative Careers (red and gold frame, desert-bloom path colors, light/dark switch). Chosen October 20.
@@ -27,7 +29,8 @@ Last updated: October 20, 2026. Check items off as they are confirmed.
 - [ ] "Noncredit classes are tuition-free" (California noncredit has no enrollment fee; confirm wording with the noncredit office)
 - [ ] Software access for students: Adobe Creative Cloud licenses and lab hours (placeholder on Student Resources)
 - [x] Gary Graves: ggraves@collegeofthedesert.edu, on Contact and as student work gallery curator (October 20)
-- [ ] Spanish version of every page (next phase)
+- [x] Spanish version of every page (October 20): docs/es/, linked with hreflang and an English/Español switch
+- [ ] Spanish review by a fluent speaker: src/programs_es.py, src/ksa_es.py, src/site_data_es.py, and the Spanish strings in build.py. Word choices to check: "título" (degree), "licenciatura" (bachelor's), "colegiatura" (tuition), "sin crédito" (noncredit), "prácticas" (internships), "asesora del programa", office names kept in English with a Spanish note
 
 ## Links added October 20 (from Gary)
 - [x] Class schedule: Self-Service search. Each course links to its own search (keyword=DDP-106); all DDP classes use subjects=DDP

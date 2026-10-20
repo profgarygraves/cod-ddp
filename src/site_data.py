@@ -19,8 +19,7 @@ TOP_LINKS = [("Apply", COD + "/students/admissions/"), ("Class Schedule", SCHEDU
              ("Catalog", CATALOG), ("Syllabi", SYLLABI), ("Financial Aid", COD + "/students/fin-aid/")]
 
 NAV = [("programs", "Programs", "programs.html"), ("start", "Get Started", "get-started.html"),
-       ("work", "Student Work", "student-work.html"), ("faculty", "Faculty &amp; Staff", "faculty.html"),
-       ("contact", "Contact", "contact.html")]
+       ("work", "Student Work", "student-work.html"), ("contact", "Faculty &amp; Contact", "contact.html")]
 
 # Second-level links shown on the Programs, Course finder, Careers, and Transfer pages
 SUBNAV = [("programs.html", "All programs"), ("courses.html", "Course finder"),

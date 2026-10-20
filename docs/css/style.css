@@ -544,3 +544,6 @@ html:has(.pnav){scroll-padding-top:4.5rem}
 /* Faculty cards: portrait spans the card */
 .person{align-items:stretch}
 .person .ph{width:100%}
+/* Language switch */
+.college .lang{display:inline-block;border:1.5px solid rgba(255,255,255,.8);border-radius:999px;padding:.15rem .7rem;font-weight:500;white-space:nowrap}
+.college .lang:hover{background:#fff;color:var(--red);text-decoration:none}
