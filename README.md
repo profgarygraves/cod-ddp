@@ -11,9 +11,9 @@ This preview is for faculty review. It is not the official site.
 | Phase | What | Status |
 |---|---|---|
 | 1 | Content inventory from the 2026-2027 catalog (`src/programs.py`) | Done, needs faculty check |
-| 2 | Homepage design directions (`docs/mockups/`) | **Pick one** |
-| 3 | Homepage and program pages | Next |
-| 4 | Course finder, careers, transfer, student resources | |
+| 2 | Homepage design directions (`docs/mockups/`) | Done: Direction C, Creative Careers |
+| 3 | Homepage and six career path pages | Done, in review |
+| 4 | Course finder, careers, transfer, get started, resources, student work, contact | Done, in review |
 | 5 | Spanish version, accessibility audit, faculty review | |
 | 6 | Handoff to COD hosting | |
 
@@ -24,13 +24,27 @@ Open questions and facts to confirm are in [CHECKLIST.md](CHECKLIST.md).
 - **Email** Prof. Gary Graves with the page name and what to change.
 - **GitHub users:** [open an issue](https://github.com/profgarygraves/cod-ddp/issues) for each page or topic.
 
+## Pages
+
+| Page | File |
+|---|---|
+| Homepage: six career paths, start course, four steps, pay | `index.html` |
+| Career paths | `design.html`, `motion.html`, `photo.html`, `interactive.html`, `digital-accessibility.html`, `software.html` |
+| Course finder (filters by path, CSU, UC, GE; works without JavaScript) | `courses.html` |
+| Careers, Transfer, Get started, Student resources | `careers.html`, `transfer.html`, `get-started.html`, `resources.html` |
+| Student work (placeholders), Contact, Accessibility | `student-work.html`, `contact.html`, `accessibility.html` |
+| Original design directions | `mockups/` |
+
 ## How the site is built
 
 Content lives in data files, so most updates are a one-line edit. Course requirements always link to the official COD catalog, so the catalog stays the authority.
 
 | File | What it holds |
 |---|---|
-| `src/programs.py` | Six creative paths, 17 awards, 46 DDP courses, advisor, and local career pay data |
+| `src/programs.py` | Six career paths, 17 awards, 46 DDP courses, advisor, and local career pay data |
+| `src/site_data.py` | COD links, navigation, people, and the text of the supporting pages |
+| `src/style.css` | All styles (copied to `docs/css/style.css` on build) |
+| `build.py` | Builds every page into `docs/`: run `python3 build.py` |
 | `docs/` | Published preview (GitHub Pages serves this folder) |
 | `docs/fonts/` | Self-hosted Jost and Roboto (open licenses included) |
 

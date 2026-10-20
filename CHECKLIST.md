@@ -3,7 +3,7 @@
 Last updated: October 20, 2026. Check items off as they are confirmed.
 
 ## Decisions for Gary
-- [ ] Pick a homepage direction: A Desert Modern, B Gallery Wall, C Wildflower, or a mix
+- [x] Homepage direction: C, Creative Careers (red and gold frame, desert-bloom path colors, light/dark switch). Chosen October 20.
 - [ ] Where the site will live: GitHub Pages linked from COD, or ported into COD's website system (OmniUpdate)
 - [ ] COD brand guide from the Public Information Office (logo files, official colors, web typeface). The Campus Standards Handbook (2005) covers signage only: Neutraface type, desert-flora color coding.
 - [ ] Use the official COD logo image in the header? The mockups use a text wordmark for now.
@@ -16,6 +16,13 @@ Last updated: October 20, 2026. Check items off as they are confirmed.
 - [ ] Photography certificate lives under Art in the catalog. Keep it on the DDP site?
 - [ ] Catalog spells "Premier Pro" in the certificate name. The website uses Premiere Pro, Adobe's spelling.
 - [ ] Noncredit classes are free and repeatable (catalog: "Repeatable: Yes"). Confirm the "free" claim with the noncredit office.
+
+## Site content to confirm (October 20 build)
+- [ ] Career titles listed for each path
+- [ ] "Noncredit classes are tuition-free" (California noncredit has no enrollment fee; confirm wording with the noncredit office)
+- [ ] Software access for students: Adobe Creative Cloud licenses and lab hours (placeholder on Student Resources)
+- [ ] Gary Graves: COD email for the Contact page
+- [ ] Spanish version of every page (next phase)
 
 ## People and places
 - [ ] Program advisor: Mari Abril, mabril@collegeofthedesert.edu, 760.674.5684 (from the 2026-2027 catalog)
