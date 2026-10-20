@@ -58,7 +58,7 @@ FOOT_LINKS = [
 
 HOME = dict(
   h1="Turn your creativity into a career.",
-  lede="Designers, editors, animators, photographers, and UX designers start here. Choose a career path, take its first class, and build a portfolio employers want to see.",
+  lede="Designers, editors, animators, photographers, and UX designers start here.",
 )
 
 STEPS = [
@@ -79,13 +79,12 @@ PEOPLE = [
 
 def initials(n): return "".join(w[0] for w in n.split()[:2])
 
-def pages(pay_section, course_link):
+def pages(pay_section, course_link, jobs_table):
     out = []
     links = lambda items: '<ul class="links">' + "".join(f'<li><a href="{u}"><b>{t}</b><span>{d}</span></a></li>' for t, d, u in items) + "</ul>"
 
     # ---------------- Careers ----------------
-    rows = "".join(f'<tr><td>{JOBS[k][0]}</td><td>{JOBS[k][2]}</td><td>{JOBS[k][3]}</td><td>{JOBS[k][1]}</td><td>{"Usually" if JOBS[k][4] else "Not always"}</td></tr>'
-                   for k in ["graphic", "designer", "marketing", "webdev", "animator", "artdir"])
+    alljobs = jobs_table(list(JOBS), "Pay and outlook for creative jobs")
     path_rows = "".join(f'<li><a href="{p["file"]}"><b>{p["name"]}</b><span>{p["jobs"]}</span></a></li>' for p in PATHS)
     out.append(dict(file="careers.html", section="programs", title="Creative careers",
       lede="What DDP graduates do, what the work pays in the Inland Empire and Coachella Valley, and how to build experience while you study.",
@@ -96,11 +95,9 @@ def pages(pay_section, course_link):
 </div></section>
 <section class="pay-wrap"><div class="wrap">
   <h2 class="h2">What creative work pays here</h2>
-  <p class="sub">Median pay in the Riverside-San Bernardino-Ontario metro, which includes the Coachella Valley. Half of workers earn more and half earn less.</p>
-  <table class="list"><caption class="sr">Median pay for creative jobs</caption>
-    <thead><tr><th scope="col">Job</th><th scope="col">Hourly</th><th scope="col">Yearly</th><th scope="col">Jobs in the metro</th><th scope="col">Bachelor&#39;s degree needed?</th></tr></thead>
-    <tbody>{rows}</tbody></table>
-  <p class="src">Source: {JOBS_SOURCE} Pay for photographers and film and video editors will be added.</p>
+  <p class="sub">Median pay in the Riverside-San Bernardino-Ontario metro, which includes the Coachella Valley (California where marked). Half of workers earn more and half earn less. Outlook and openings are national projections for 2025 to 2035.</p>
+  {alljobs}
+  <p class="src">Source: {JOBS_SOURCE}</p>
 </div></section>
 <section><div class="wrap">
   <h2 class="h2">Build experience while you study</h2>

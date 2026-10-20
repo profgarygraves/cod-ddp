@@ -8,7 +8,7 @@ Content lives in src/programs.py (paths, awards, courses, careers) and src/site.
 import os, re, shutil, sys
 ROOT = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(ROOT, "src"))
-from programs import PATHS, AWARDS, KIND, COURSES, JOBS, JOBS_SOURCE, ADVISOR, COURSES_URL
+from programs import PATHS, AWARDS, KIND, COURSES, JOBS, JOBS_SOURCE, ADVISOR, COURSES_URL, CAREERS, EDU
 import site_data as S
 
 OUT = os.path.join(ROOT, "docs")
@@ -131,9 +131,26 @@ def simple_hero(title, lede, trail, sub=None):
   {subnav(sub) if sub else ""}
 </div></div>'''
 
+def short_title(t):
+    return re.sub(r" \(.*\)", "", t)
+
 def pay_line(key):
-    t, n, hr, yr, ba = JOBS[key]
-    return hr, t, yr, ba
+    t, n, hr, yr, area, g, o, se, edu = JOBS[key]
+    return hr, short_title(t), yr, area
+
+def outlook(g):
+    word = "Growing" if g > 3 else ("Shrinking" if g < -3 else "Steady")
+    return f'{word} ({g:+.1f}%)'.replace("-", "&minus;")
+
+def jobs_table(keys, caption):
+    rows = []
+    for k in keys:
+        t, n, hr, yr, area, g, o, se, edu = JOBS[k]
+        where = ' <span class="ca">California</span>' if area == "CA" else ""
+        rows.append(f'<tr><th scope="row">{t}</th><td data-l="Median pay here"><b>{hr}</b>/hr<br><span class="yr">{yr}/yr</span>{where}</td><td data-l="Jobs in the region">{n}</td><td data-l="10-year outlook (U.S.)">{outlook(g)}</td><td data-l="Openings per year (U.S.)">{o:,.1f}k</td><td data-l="Self-employed">{se:.0f}%</td><td data-l="Typical entry education">{EDU[edu]}</td></tr>')
+    return f'''<div class="tscroll"><table class="list jobs"><caption class="sr">{caption}</caption>
+    <thead><tr><th scope="col">Job</th><th scope="col">Median pay here</th><th scope="col">Jobs in the region</th><th scope="col">10-year outlook (U.S.)</th><th scope="col">Openings per year (U.S.)</th><th scope="col">Self-employed</th><th scope="col">Typical entry education</th></tr></thead>
+    <tbody>{"".join(rows)}</tbody></table></div>'''
 
 def count_awards(keys):
     deg = sum(1 for k in keys if AWARDS[k]["kind"] in ("AA", "AS"))
@@ -149,14 +166,15 @@ def count_awards(keys):
 def tile(p, cls):
     wage = ""
     if p["pay"]:
-        hr, t, yr, ba = pay_line(p["pay"][0])
-        wage = f'<p class="wage"><b>{hr}</b> median for local {t.lower()}</p>'
+        hr, t, yr, area = pay_line(p["pay"][0])
+        wage = f'<p class="wage"><b>{hr}</b> median for {"local " if area == "metro" else ""}{t.lower()}{" in California" if area == "CA" else ""}</p>'
     extra = '<p class="wage">Or transfer to a four-year design program with the Design Studies AA.</p>' if p["key"] == "design" else ""
     free = ' <span class="badge">Free</span>' if p["key"] == "software" else ""
     jobs = p["jobs"] if p["key"] != "software" else "Adobe Certified skills in Photoshop, Illustrator, InDesign, Premiere Pro, and After Effects. Noncredit, no experience needed."
     fl = FLOWER
+    uniq = f'<p class="unique">Only one in California. Online.</p>' if p.get("unique") else ""
     return (f'<li class="{cls} c-{p["color"]}">{fl}<div><h2><a href="{p["file"]}">{p["name"]}</a>{free}</h2>'
-            f'<p class="jobs">{jobs}</p>{wage}{extra}</div>'
+            f'<p class="jobs">{jobs}</p>{wage}{extra}{uniq}</div>'
             f'<p class="start"><span>Start with <b>{p["start"][0]}</b></span><span>{count_awards(p["awards"])}</span></p></li>')
 
 def build_home():
@@ -170,7 +188,7 @@ def build_home():
   </div>
   <aside class="mini" aria-labelledby="here-h">
     <h2 id="here-h">Exploring? Start with DDP 100.</h2>
-    <p>Introduction to Digital Art &amp; Media samples every program. Open to everyone, transfers to CSU and UC, counts for COD GE Area A3, and is required for {n100} DDP programs.</p>
+    <p>It samples every program and is open to everyone.</p>
     <a class="btn btn-gold" href="{S.sched("100")}">Find a DDP 100 section</a>
   </aside>
 </div></div>
@@ -195,7 +213,7 @@ def build_home():
     return page("index.html", "Home", body, "home", s["lede"])
 
 def pay_section(keys=("graphic", "webdev", "animator"), heading="What creative work pays here"):
-    items = "".join(f'<li><strong>{JOBS[k][2]}/hr</strong><span>{JOBS[k][0]} ({JOBS[k][3]} a year){", usually with a bachelor&#39;s degree" if JOBS[k][4] else ""}</span></li>' for k in keys)
+    items = "".join(f'<li><strong>{JOBS[k][2]}/hr</strong><span>{short_title(JOBS[k][0])} ({JOBS[k][3]} a year)</span></li>' for k in keys)
     return f'''<section class="pay-wrap" aria-labelledby="pay-h"><div class="wrap">
   <h2 class="h2" id="pay-h">{heading}</h2>
   <p class="sub">Median pay in the Riverside-San Bernardino-Ontario metro, which includes the Coachella Valley. <a href="careers.html">More on careers</a>.</p>
@@ -210,6 +228,7 @@ def award_card(k):
     units = "no units" if a["kind"] == "CC" else f'{a["units"]} units'
     tr = ' <span class="badge">Transfer</span>' if a.get("transfer") else ""
     nc = ' <span class="badge nc">Tuition-free</span>' if a["kind"] == "CC" else ""
+    nc += ' <span class="badge">Only one in California</span> <span class="badge">Online</span>' if a.get("unique") else ""
     core = "".join(f"<li>{course_link(c)}</li>" for c in a["core"])
     choose = ""
     if a.get("choose"):
@@ -233,8 +252,9 @@ def build_path(p):
     others = "".join(f'<li class="c-{o["color"]}"><a href="{o["file"]}">{o["name"]}</a></li>' for o in PATHS if o is not p)
     aside = ""
     if p["pay"]:
-        hr, t, yr, ba = pay_line(p["pay"][0])
-        aside = f'<aside><p><b>{hr}</b>median hourly pay for {t.lower()} in the Inland Empire and Coachella Valley{" (usually with a bachelor&#39;s degree)" if ba else ""}</p><p><a href="careers.html">More careers and pay</a></p></aside>'
+        hr, t, yr, area = pay_line(p["pay"][0])
+        place = "in the Inland Empire and Coachella Valley" if area == "metro" else "in California"
+        aside = f'<aside><p><b>{hr}</b>median hourly pay for {t.lower()} {place}</p><p><a href="#car-h">Careers and pay on this path</a></p></aside>'
     else:
         aside = f'<aside><p class="jobs-h">Careers</p><p>{p["jobs"]}</p></aside>'
     jobs = f'<p class="lede" style="margin-top:.75rem"><strong>Careers:</strong> {p["jobs"]}</p>' if p["pay"] else ""
@@ -261,6 +281,7 @@ def build_path(p):
   <div>
     {crumbs([("Home", "index.html"), ("Programs", "programs.html"), (p["name"], None)])}
     <h1>{p["name"]}</h1>
+    {f'<p class="unique">{p["unique"]}</p>' if p.get("unique") else ""}
     <p class="lede">{p["intro"]}</p>
     {jobs}
     <nav class="jump" aria-label="On this page"><ul><li><a href="#prog-h">Programs</a></li><li><a href="#crs-h">Courses</a></li><li><a href="#car-h">Careers</a></li><li><a href="#tr-h">Transfer</a></li></ul></nav>
@@ -310,20 +331,27 @@ def build_path(p):
 
 
 def path_careers(p):
-    rows = "".join(f'<tr><td>{JOBS[k][0]}</td><td>{JOBS[k][2]}</td><td>{JOBS[k][3]}</td><td>{"Usually" if JOBS[k][4] else "Not always"}</td></tr>' for k in p["pay"])
-    table = (f'''<table class="list"><caption class="sr">Median pay for {strip(p["name"])} careers</caption>
-    <thead><tr><th scope="col">Job</th><th scope="col">Hourly</th><th scope="col">Yearly</th><th scope="col">Bachelor&#39;s degree needed?</th></tr></thead>
-    <tbody>{rows}</tbody></table>
-  <p class="src">Median pay, {JOBS_SOURCE}</p>''') if rows else '<p class="ph">Local pay data for these jobs is coming.</p>'
+    c = CAREERS[p["key"]]
+    ladder = "".join(f'<li><h4>{st}</h4><p>{t}</p></li>' for st, t in c["ladder"])
+    emp = "".join(f"<li>{e}</li>" for e in c["employers"])
+    sk = "".join(f"<li>{e}</li>" for e in c["skills"])
     return f'''<section class="pay-wrap" aria-labelledby="car-h"><div class="wrap">
   <h2 class="h2" id="car-h">Careers</h2>
-  <p class="sub"><strong>Jobs this path leads to:</strong> {p["jobs"]}.</p>
-  {table}
+  <p class="sub">{c["work"]}</p>
+  <h3 class="h3">Jobs and pay</h3>
+  {jobs_table(p["pay"], "Jobs, pay, and outlook for " + strip(p["name"]))}
+  <p class="src">Pay is the median for the Riverside-San Bernardino-Ontario metro, which includes the Coachella Valley, unless marked California. Outlook, openings, self-employment, and education are national. Source: {JOBS_SOURCE}</p>
+  <p class="note">"Typical entry education" is what most people in the job have. Creative employers hire from portfolios, so a COD certificate plus strong work can start your career, and a transfer degree keeps the bachelor&#39;s option open. {c["note"]}</p>
+  <div class="cgrid">
+    <div><h3 class="h3">Career ladder</h3><ol class="ladder">{ladder}</ol></div>
+    <div><h3 class="h3">Where the jobs are</h3><ul class="ticks">{emp}</ul></div>
+    <div><h3 class="h3">Skills employers want</h3><ul class="ticks">{sk}</ul></div>
+  </div>
   <ul class="links four" style="margin-top:2rem">
+    <li><a href="{S.L["handshake"]}"><b>Find jobs on Handshake</b><span>Jobs and internships for COD students. Sign in with your COD account.</span></a></li>
     <li><a href="courses.html#ddp-195"><b>DDP 195</b><span>Business practices and portfolio preparation: freelancing, pricing, clients, and your portfolio.</span></a></li>
     <li><a href="courses.html#ddp-095a"><b>DDP 095A</b><span>Earn units for a design job or internship.</span></a></li>
-    <li><a href="{S.L["handshake"]}"><b>Find jobs on Handshake</b><span>Jobs and internships for COD students. Sign in with your COD account.</span></a></li>
-    <li><a href="careers.html"><b>Careers &amp; pay</b><span>All creative careers, local pay, and the career center.</span></a></li>
+    <li><a href="{S.L["career"]}"><b>Career center</b><span>Career counseling, resumes, and job fairs at COD.</span></a></li>
   </ul>
 </div></section>'''
 
@@ -354,6 +382,7 @@ def build_programs():
   <div class="sw" aria-hidden="true"></div>
   <div class="pi">
     <h2><a href="{p["file"]}">{p["name"]}</a></h2>
+    {f'<p class="unique">{p["unique"]}</p>' if p.get("unique") else ""}
     <p>{p["pitch"]}</p>
     <p class="meta"><span>Start with <b>{p["start"][0]}</b></span><span>{count_awards(p["awards"])}</span></p>
   </div>
@@ -426,7 +455,7 @@ def build():
     shutil.copy(os.path.join(ROOT, "src", "style.css"), os.path.join(OUT, "css", "style.css"))
     made = [build_home(), build_programs(), build_courses()]
     made += [build_path(p) for p in PATHS]
-    for pg in S.pages(pay_section, course_link):
+    for pg in S.pages(pay_section, course_link, jobs_table):
         made.append(build_content(pg))
     print(f"Built {len(made)} pages:", ", ".join(made))
 
