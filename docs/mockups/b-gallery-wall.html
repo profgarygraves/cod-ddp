@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Direction B: Gallery Wall | DDP | College of the Desert</title>
+<link rel="stylesheet" href="base.css">
+<style>
+:root{--wall:#fbfbf9;--label:#5c6166}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--wall:#1b1e21;--label:#a9a59d}}
+:root[data-theme="dark"]{--wall:#1b1e21;--label:#a9a59d}
+body{background:var(--wall)}
+
+.dept .wrap{display:flex;align-items:flex-end;justify-content:space-between;gap:1rem 2rem;flex-wrap:wrap;padding-top:1.4rem;padding-bottom:1.1rem}
+.dept .name{font:500 1.15rem/1.15 var(--display);color:var(--ink);text-decoration:none}
+.dept .name small{display:block;font:400 .85rem/1.3 var(--body);color:var(--label)}
+.dept nav ul{display:flex;gap:.2rem 1.3rem;flex-wrap:wrap;list-style:none;margin:0;padding:0}
+.dept nav a{color:var(--ink);text-decoration:none;font-size:.97rem}
+.dept nav a:hover{color:var(--link);text-decoration:underline}
+
+/* The hang: student work is the hero */
+.hang{padding:clamp(1.5rem,4vw,3rem) 0 clamp(3rem,6vw,5rem)}
+.hang h1{font:400 clamp(2.2rem,4.6vw,3.6rem)/1.05 var(--display);letter-spacing:-.015em;max-width:15ch;margin:0 0 .9rem}
+.hang .intro{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,22rem);gap:1rem 3rem;align-items:end;margin-bottom:clamp(2rem,4vw,3.5rem)}
+.hang .intro p{margin:0;color:var(--muted)}
+.hang .intro .btn{margin-top:1rem}
+.wall{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:clamp(1.5rem,3vw,2.75rem) clamp(1rem,2.4vw,2.25rem);align-items:start}
+.piece{margin:0}
+.piece .art{box-shadow:0 1px 0 rgba(0,0,0,.06),0 14px 30px -18px rgba(0,0,0,.45);overflow:hidden;position:relative}
+.piece figcaption{margin-top:.75rem;font-size:.82rem;line-height:1.45;color:var(--label);max-width:24ch}
+.piece figcaption b{display:block;color:var(--ink);font-weight:500;font-size:.9rem}
+.piece figcaption i{font-style:italic}
+.p1{grid-column:1/6}.p2{grid-column:6/9;margin-top:4rem}.p3{grid-column:9/13}
+.p4{grid-column:2/5}.p5{grid-column:5/10;margin-top:-1rem}.p6{grid-column:10/13;margin-top:3rem}
+
+/* Placeholder "works": stand-ins until real student pieces arrive */
+.art{aspect-ratio:var(--ar,4/5);background:#ddd}
+.w-poster{--ar:3/4;background:#A30E22;display:grid;place-items:end start;padding:8%}
+.w-poster::before{content:"";position:absolute;width:62%;aspect-ratio:1;border-radius:50%;background:#FFC423;top:12%;right:-10%}
+.w-poster span:not(.ph-tag){position:relative;font:600 clamp(1.4rem,3vw,2.6rem)/.9 var(--display);color:#fff;text-transform:lowercase}
+.w-photo{--ar:4/5;background:linear-gradient(180deg,#f0b38a 0 38%,#d98b6a 38% 52%,#8a6a5a 52% 64%,#3d3a3a 64%)}
+.w-photo::after{content:"";position:absolute;left:58%;top:30%;width:5%;height:42%;background:#2a2626;box-shadow:-18px 30px 0 -2px #2a2626,14px 22px 0 -3px #2a2626}
+.w-3d{--ar:1/1;background:radial-gradient(circle at 35% 30%,#b8c7d6,#4c6178 60%,#1f2a36)}
+.w-3d::after{content:"";position:absolute;inset:28%;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff 0 6%,#FFC423 14%,#b5810a 70%);box-shadow:0 30px 30px -14px rgba(0,0,0,.6)}
+.w-ui{--ar:3/4;background:#f7f7f7;padding:9%;display:flex;flex-direction:column;gap:.7rem;border:1px solid #e3e3e3}
+.w-ui i{display:block;height:1.4rem;background:#e1e1e1;border-radius:6px}
+.w-ui i:first-child{height:38%;background:#103355}
+.w-ui i:nth-child(3){width:60%;background:#A30E22;height:2.2rem}
+.w-motion{--ar:16/9;background:#141619}
+.w-motion::before{content:"";position:absolute;left:8%;right:8%;top:42%;height:16%;background:repeating-linear-gradient(90deg,#FFC423 0 10%,transparent 10% 14%)}
+.w-motion::after{content:"";position:absolute;left:8%;right:52%;bottom:14%;height:3px;background:#fff}
+.w-type{--ar:4/5;background:#e9e3d6;display:grid;place-items:center}
+.w-type span:not(.ph-tag){font:300 clamp(4rem,9vw,8rem)/1 var(--display);color:#103355}
+.ph-tag{position:absolute;z-index:2;font-family:var(--body);left:0;bottom:0;background:rgba(0,0,0,.6);color:#fff;font-size:.68rem;padding:.15rem .4rem}
+
+section{padding:clamp(3rem,7vw,5.5rem) 0;border-top:1px solid var(--line)}
+h2{font:400 clamp(1.8rem,3.4vw,2.5rem)/1.1 var(--display);margin:0 0 .6rem}
+.sub{color:var(--muted);max-width:40rem;margin:0 0 2.5rem}
+
+/* Paths as an exhibition guide */
+.guide{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2.5rem 2.25rem}
+.guide li{border-top:1px solid var(--ink);padding-top:1rem}
+.guide h3{font:500 1.3rem/1.2 var(--display);margin:0 0 .4rem}
+.guide h3 a{color:var(--ink);text-decoration:none}
+.guide h3 a:hover{text-decoration:underline;color:var(--link)}
+.guide p{margin:0 0 .6rem;color:var(--muted)}
+.guide .meta{font-size:.85rem;color:var(--label)}
+.guide .meta b{color:var(--ink);font-weight:500}
+
+.feature{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:2rem 4rem;align-items:center}
+.label-card{background:var(--bg);border:1px solid var(--line);padding:1.6rem 1.75rem;max-width:26rem}
+.label-card .t{font:500 1.6rem/1.15 var(--display);margin:0 0 .25rem}
+.label-card .m{font-size:.9rem;color:var(--label);margin:0 0 1rem}
+.label-card p{margin:0 0 1rem}
+.label-card ul{margin:0;padding-left:1.1rem;font-size:.95rem}
+
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:3rem}
+.two h3{font:500 1.5rem/1.2 var(--display);margin:0 0 .6rem}
+
+.steps{list-style:none;counter-reset:s;padding:0;margin:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:2rem}
+.steps li{counter-increment:s}
+.steps li::before{content:counter(s);display:grid;place-items:center;width:2.2rem;height:2.2rem;border-radius:50%;background:var(--red);color:#fff;font:500 1rem var(--display);margin-bottom:.75rem}
+.steps h3{font:500 1.15rem/1.25 var(--display);margin:0 0 .35rem}
+.steps p{margin:0;color:var(--muted);font-size:.97rem}
+
+.pay{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.5rem;list-style:none;padding:0;margin:0}
+.pay strong{display:block;font:300 2.4rem/1 var(--display);margin-bottom:.35rem}
+.pay span{color:var(--muted);font-size:.95rem}
+.src{font-size:.82rem;color:var(--label);margin-top:1.25rem}
+
+.dept-foot{background:var(--red);color:#fff;padding:2.25rem 0}
+.dept-foot a{color:#fff}
+.dept-foot .wrap{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2rem}
+.dept-foot h2{font-size:1.3rem;color:#fff}
+.dept-foot p{margin:.15rem 0}
+
+@media (max-width:900px){
+  .wall{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .p1,.p2,.p3,.p4,.p5,.p6{grid-column:auto;margin-top:0}
+  .p5{grid-column:1/-1}
+  .hang .intro,.feature,.two{grid-template-columns:1fr}
+  .guide,.pay{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .steps{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .dept-foot .wrap{grid-template-columns:1fr}
+}
+@media (max-width:520px){.guide,.pay,.steps{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="preview"><div class="wrap"><span>Design preview, Direction B of 3. Not the official site.</span><a href="index.html">Compare all three directions</a></div></div>
+
+<header>
+  <div class="college"><div class="wrap">
+    <a class="cod" href="https://www.collegeofthedesert.edu/">College of the Desert</a>
+    <ul>
+      <li><a href="https://www.collegeofthedesert.edu/students/admissions/">Apply</a></li>
+      <li><a href="https://www.collegeofthedesert.edu/students/catalog-schedule/">Class Schedule</a></li>
+      <li><a href="https://catalog.collegeofthedesert.edu/">Catalog</a></li>
+      <li><a href="https://www.collegeofthedesert.edu/students/fin-aid/">Financial Aid</a></li>
+      <li><a href="#" lang="es">Español</a></li>
+    </ul>
+  </div></div>
+  <div class="dept"><div class="wrap">
+    <a class="name" href="#">Digital Design &amp; Production<small>Department at College of the Desert</small></a>
+    <nav aria-label="Department"><ul>
+      <li><a href="#paths">Programs</a></li>
+      <li><a href="#">Courses</a></li>
+      <li><a href="#">Student Work</a></li>
+      <li><a href="#">Careers</a></li>
+      <li><a href="#start">Get Started</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul></nav>
+  </div></div>
+</header>
+
+<main id="main">
+<div class="hang">
+  <div class="wrap">
+    <div class="intro">
+      <h1>Made by students at College of the Desert.</h1>
+      <div>
+        <p>Design, video, animation, photography, web, and games. Learn on industry software and leave with a portfolio like this one.</p>
+        <a class="btn btn-red" href="#paths">Find your path</a>
+      </div>
+    </div>
+    <div class="wall" aria-label="Student work">
+      <figure class="piece p1"><div class="art w-poster"><span>desert<br>x<br>film fest</span><span class="ph-tag">Placeholder</span></div>
+        <figcaption><b>Student name</b><i>Festival poster</i>, 2026. Digital illustration. DDP 111 Advertising Design</figcaption></figure>
+      <figure class="piece p2"><div class="art w-ui"><i></i><i></i><i></i><i></i><span class="ph-tag">Placeholder</span></div>
+        <figcaption><b>Student name</b><i>Trail app</i>, 2026. UX prototype. DDP 151 User Experience Design</figcaption></figure>
+      <figure class="piece p3"><div class="art w-photo"><span class="ph-tag">Placeholder</span></div>
+        <figcaption><b>Student name</b><i>Joshua Tree, dusk</i>, 2026. Digital photograph. DDP 133 Nature Photography</figcaption></figure>
+      <figure class="piece p4"><div class="art w-3d"><span class="ph-tag">Placeholder</span></div>
+        <figcaption><b>Student name</b><i>Brass sphere study</i>, 2026. 3D render. DDP 144 3D Animation</figcaption></figure>
+      <figure class="piece p5"><div class="art w-motion"><span class="ph-tag">Placeholder</span></div>
+        <figcaption><b>Student name</b><i>Title sequence</i>, 2026. Motion graphics, 0:45. DDP 121 Motion Graphics</figcaption></figure>
+      <figure class="piece p6"><div class="art w-type"><span>Ag</span><span class="ph-tag">Placeholder</span></div>
+        <figcaption><b>Student name</b><i>Mojave Sans</i>, 2026. Original typeface. DDP 112 Digital Typography</figcaption></figure>
+    </div>
+  </div>
+</div>
+
+<section id="paths" aria-labelledby="paths-h">
+  <div class="wrap">
+    <h2 id="paths-h">Find your path</h2>
+    <p class="sub">Six areas, seventeen degrees and certificates. Each path starts with one course that counts toward your award.</p>
+    <ul class="guide">
+      <li><h3><a href="#">Graphic design &amp; branding</a></h3><p>Logos, posters, packaging, ads, and type.</p><p class="meta">Start with <b>DDP 100</b>. 2 degrees, 2 certificates.</p></li>
+      <li><h3><a href="#">Video, motion &amp; animation</a></h3><p>Editing, animated titles, 3D characters, and storytelling.</p><p class="meta">Start with <b>DDP 120</b>. 2 certificates.</p></li>
+      <li><h3><a href="#">Photography &amp; drone imaging</a></h3><p>Professional images, from the studio to the sky.</p><p class="meta">Start with <b>DDP 131</b>. 2 certificates.</p></li>
+      <li><h3><a href="#">Web, UX &amp; games</a></h3><p>Websites, apps, and games people enjoy using.</p><p class="meta">Start with <b>DDP 151</b>. 1 degree, 2 certificates.</p></li>
+      <li><h3><a href="#">Accessibility</a></h3><p>Digital content that works for everyone, and the laws behind it.</p><p class="meta">Start with <b>DDP 200</b>. 1 certificate.</p></li>
+      <li><h3><a href="#">Learn the software</a></h3><p>Free noncredit Adobe classes. No experience needed.</p><p class="meta">Start with <b>DDP 301A</b>. 5 certificates of completion.</p></li>
+    </ul>
+  </div>
+</section>
+
+<section aria-labelledby="here-h">
+  <div class="wrap feature">
+    <div>
+      <h2 id="here-h">Not sure yet? Start with DDP 100.</h2>
+      <p class="sub" style="margin-bottom:0">It samples every part of the field, so you can find what you love before you choose a path.</p>
+    </div>
+    <div class="label-card">
+      <p class="t">DDP 100</p>
+      <p class="m">Introduction to Digital Art &amp; Media. 3 units.</p>
+      <p>Imaging, illustration, layout, animation, 3D, and new tools. Open to everyone.</p>
+      <ul><li>Transfers to CSU and UC (C-ID ARTS 250)</li><li>Counts for COD general education, Area A3</li><li>Required for four DDP degrees and certificates</li></ul>
+    </div>
+  </div>
+</section>
+
+<section aria-label="More ways in">
+  <div class="wrap two">
+    <div><h3>Learn Adobe for free</h3><p>Noncredit classes in Photoshop, Illustrator, InDesign, Premiere Pro, and After Effects cost nothing and need no experience. Finish part A and part B to earn a Certificate of Completion and prepare for the Adobe Certified exam.</p><a href="#">How noncredit works</a></div>
+    <div><h3>Coming fall 2027: the Palm Springs campus</h3><p>COD's new campus at Farrell Drive and Tahquitz Canyon Way is planned to open in fall 2027, with studios and maker spaces for digital media and arts.</p><a href="https://www.collegeofthedesert.edu/">Follow the Palm Springs campus</a></div>
+  </div>
+</section>
+
+<section id="start" aria-labelledby="start-h">
+  <div class="wrap">
+    <h2 id="start-h">Get started in four steps</h2>
+    <p class="sub">From your first class to a finished certificate.</p>
+    <ol class="steps">
+      <li><h3>Apply to COD</h3><p>Admission is free through CCCApply. Already a student? Make a DDP program your major.</p></li>
+      <li><h3>Take a start course</h3><p>DDP 100, or the first course on your path. It counts toward your award.</p></li>
+      <li><h3>Plan with the advisor</h3><p>Map your semesters with Mari Abril, DDP program advisor, and a counselor.</p></li>
+      <li><h3>Build and apply</h3><p>Finish your portfolio in DDP 195, then apply for your certificate or degree.</p></li>
+    </ol>
+  </div>
+</section>
+
+<section aria-labelledby="pay-h">
+  <div class="wrap">
+    <h2 id="pay-h">What creative work pays here</h2>
+    <p class="sub">Median pay in the Riverside-San Bernardino-Ontario metro, which includes the Coachella Valley.</p>
+    <ul class="pay">
+      <li><strong>$31.68/hr</strong><span>Graphic designers ($65,900 a year)</span></li>
+      <li><strong>$34.81/hr</strong><span>Web developers ($72,400 a year)</span></li>
+      <li><strong>$45.88/hr</strong><span>Special effects artists &amp; animators, usually with a bachelor's degree</span></li>
+    </ul>
+    <p class="src">Source: U.S. Bureau of Labor Statistics, Occupational Employment and Wage Statistics, May 2025.</p>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="dept-foot"><div class="wrap">
+    <div><h2>Digital Design &amp; Production</h2><p>Questions about a program or a class? Start with the program advisor.</p></div>
+    <div><h2>Program advisor</h2><p>Mari Abril</p><p><a href="mailto:mabril@collegeofthedesert.edu">mabril@collegeofthedesert.edu</a></p><p>760.674.5684</p></div>
+    <div><h2>Visit</h2><p><i>Department office and lab locations to confirm</i></p></div>
+  </div></div>
+  <div class="cod-foot"><div class="wrap">
+    <div><h2>College of the Desert</h2><p>43-500 Monterey Ave<br>Palm Desert, CA 92260<br>760.346.8041</p></div>
+    <div><h2>Students</h2><ul><li><a href="https://www.collegeofthedesert.edu/students/admissions/">Admissions</a></li><li><a href="https://www.collegeofthedesert.edu/students/fin-aid/">Financial Aid</a></li><li><a href="https://www.collegeofthedesert.edu/students/">Student Services</a></li></ul></div>
+    <div><h2>About</h2><ul><li><a href="https://www.collegeofthedesert.edu/accessibility.php">Accessibility</a></li><li><a href="https://www.collegeofthedesert.edu/privacy-policy.php">Privacy Policy</a></li><li><a href="https://www.collegeofthedesert.edu/directory/">Directory</a></li></ul></div>
+    <p class="fine">College of the Desert is part of the Desert Community College District.</p>
+  </div></div>
+</footer>
+</body>
+</html>
