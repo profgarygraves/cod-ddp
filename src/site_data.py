@@ -16,7 +16,7 @@ PREVIEW = ('Design preview for faculty review. Not the official site. '
            '<a href="https://github.com/profgarygraves/cod-ddp/issues">Send comments on GitHub</a>.')
 
 TOP_LINKS = [("Apply", COD + "/students/admissions/"), ("Class Schedule", SCHEDULE),
-             ("Catalog", CATALOG), ("Financial Aid", COD + "/students/fin-aid/")]
+             ("Catalog", CATALOG), ("Syllabi", SYLLABI), ("Financial Aid", COD + "/students/fin-aid/")]
 
 NAV = [("programs", "Programs", "programs.html"), ("start", "Get Started", "get-started.html"),
        ("work", "Student Work", "student-work.html"), ("contact", "Contact", "contact.html")]

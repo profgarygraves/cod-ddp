@@ -222,6 +222,31 @@ def pay_section(keys=("graphic", "webdev", "animator"), heading="What creative w
 </div></section>'''
 
 # ---------------------------------------------------------------------------
+ICON = {
+ "catalog": '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v17H6.5A2.5 2.5 0 0 0 4 21.5z"/><path d="M4 21.5A2.5 2.5 0 0 1 6.5 19H20v3H6.5"/></svg>',
+ "schedule": '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M8 14h2M14 14h2M8 17h2"/></svg>',
+ "syllabus": '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></svg>',
+}
+
+def tools(code=None, label=""):
+    """The three class tools, always named and explained the same way."""
+    cat = S.cat_search(code) if code else COURSES_URL
+    sch = S.sched(code) if code else S.SCHEDULE_DDP
+    who = f" for {ddp(code)}" if code else ""
+    find = f"Search for &ldquo;{ddp(code)}&rdquo;." if code else "Search by course code, like &ldquo;DDP 100&rdquo;."
+    return f'''<ul class="ctools"{f' aria-label="{label}"' if label else ""}>
+  <li><a href="{cat}"><span class="ic">{ICON["catalog"]}</span><b>Catalog<span class="sr">{who}</span></b><span>Official description, units, and requirements</span></a></li>
+  <li><a href="{sch}"><span class="ic">{ICON["schedule"]}</span><b>Class schedule<span class="sr">{who}</span></b><span>Days, times, online sections, and registration</span></a></li>
+  <li><a href="{S.SYLLABI}"><span class="ic">{ICON["syllabus"]}</span><b>Syllabus library<span class="sr">{who}</span></b><span>What past classes covered. {find}</span></a></li>
+</ul>'''
+
+def bloom_art():
+    """Decorative desert-bloom cluster for program headers."""
+    fl = [(330, 120, 1.9, .22), (210, 60, 1.1, .16), (420, 250, 1.3, .18), (250, 230, .8, .26), (120, 170, .7, .14), (380, 30, .6, .2), (470, 140, .5, .3)]
+    g = "".join(f'<g transform="translate({x} {y}) scale({sc})" opacity="{o}"><circle cx="0" cy="-26" r="22"/><circle cx="26" cy="0" r="22"/><circle cx="0" cy="26" r="22"/><circle cx="-26" cy="0" r="22"/></g>' for x, y, sc, o in fl)
+    c = "".join(f'<circle cx="{x}" cy="{y}" r="{15*sc}" class="ctr"/>' for x, y, sc, o in fl[:4])
+    return f'<svg class="blooms-art" viewBox="0 0 520 320" aria-hidden="true" focusable="false"><g fill="currentColor">{g}</g>{c}</svg>'
+
 def award_card(k):
     a = AWARDS[k]
     kind = KIND[a["kind"]]
@@ -245,30 +270,51 @@ def award_card(k):
   <p class="req">Required DDP courses:</p>
   <ul class="chips">{core}</ul>
   {choose}{elect}{other}{ge}
-  <a class="go" href="{a["url"]}">Full requirements in the catalog<span class="sr"> for {strip(a["name"])}</span></a>
+  <p class="go"><a href="#ksa-{k}">What you&#39;ll learn<span class="sr"> in {strip(a["name"])}</span></a><a href="{a["url"]}"><span class="ic">{ICON["catalog"]}</span>Catalog requirements<span class="sr"> for {strip(a["name"])}</span></a></p>
 </li>'''
+
+def ksa_block(k, open_=False):
+    from ksa import KSA
+    a = AWARDS[k]; q = KSA[k]
+    col = lambda h, d, items: f'<div><h4>{h}</h4><p class="d">{d}</p><ul class="ticks">' + "".join(f"<li>{i}</li>" for i in items) + "</ul></div>"
+    return f'''<details class="ksa" id="ksa-{k}"{" open" if open_ else ""}>
+  <summary><span class="k">{a["kind"] if a["kind"] != "CC" else "Noncredit"}</span>{a["name"]}</summary>
+  <div class="kgrid">
+    {col("Knowledge", "What you&#39;ll understand", q["k"])}
+    {col("Skills", "What you&#39;ll be able to do", q["s"])}
+    {col("Abilities", "How you&#39;ll use it on the job", q["a"])}
+  </div>
+</details>'''
+
+def confidence(p, sc):
+    first = "No experience needed. Noncredit classes are tuition-free and can be repeated." if p["key"] == "software" else f"{sc} has no prerequisite. Bring your curiosity; your instructors will teach you the tools."
+    return f'''<section class="confide" aria-labelledby="cf-h"><div class="wrap">
+  <h2 class="h2" id="cf-h">Every designer started with a first class.</h2>
+  <ul class="cf">
+    <li><h3>Start where you are</h3><p>{first}</p></li>
+    <li><h3>Learn by making</h3><p>Most 3-unit DDP courses include 54 hours of hands-on lab time, so you build real projects from week one.</p></li>
+    <li><h3>Help is here</h3><p>Free tutoring at the <a href="{S.L["tutoring"]}">Academic Skills Center</a>, instructors who work in the field, and a <a href="contact.html">program advisor</a> to help you plan.</p></li>
+  </ul>
+</div></section>'''
 
 def build_path(p):
     others = "".join(f'<li class="c-{o["color"]}"><a href="{o["file"]}">{o["name"]}</a></li>' for o in PATHS if o is not p)
-    aside = ""
     if p["pay"]:
         hr, t, yr, area = pay_line(p["pay"][0])
         place = "in the Inland Empire and Coachella Valley" if area == "metro" else "in California"
-        aside = f'<aside><p><b>{hr}</b>median hourly pay for {t.lower()} {place}</p><p><a href="#car-h">Careers and pay on this path</a></p></aside>'
+        aside = f'<aside><p><b>{hr}</b>median hourly pay for {t.lower()} {place}</p><p><a href="#car-h">Careers and pay</a></p></aside>'
     else:
-        aside = f'<aside><p class="jobs-h">Careers</p><p>{p["jobs"]}</p></aside>'
-    jobs = f'<p class="lede" style="margin-top:.75rem"><strong>Careers:</strong> {p["jobs"]}</p>' if p["pay"] else ""
+        aside = ""
     sc, st = p["start"]
     start_code = sc.replace("DDP ", "")
     st_course = COURSES[start_code]
-    tr = st_course[2]
-    trtext = {"CSU/UC": "Transfers to CSU and UC", "CSU": "Transfers to CSU", "": "Noncredit, tuition-free" if st_course[1] == "0" else "Career course"}[tr]
-    # courses on path (primary path or used by its awards)
+    trtext = {"CSU/UC": "Transfers to CSU and UC", "CSU": "Transfers to CSU", "": "Noncredit, tuition-free" if st_course[1] == "0" else "Career course"}[st_course[2]]
     codes = [c for c in COURSES if p["key"] in course_paths(c)]
     rows = "".join(
-        f'<tr><td>{course_link(c)}</td><td>{COURSES[c][0]}</td><td>{"Noncredit" if COURSES[c][1]=="0" else COURSES[c][1]+" units"}</td><td>{COURSES[c][2] or "&nbsp;"}</td><td><a href="{S.sched(c)}">Sections<span class="sr"> of {ddp(c)}</span></a></td></tr>'
+        f'<tr><td>{course_link(c)}</td><td>{COURSES[c][0]}</td><td>{"Noncredit" if COURSES[c][1]=="0" else COURSES[c][1]+" units"}</td><td>{COURSES[c][2] or "&nbsp;"}</td>'
+        f'<td class="lk"><a href="{S.cat_search(c)}">Catalog<span class="sr"> for {ddp(c)}</span></a></td><td class="lk"><a href="{S.sched(c)}">Schedule<span class="sr"> for {ddp(c)}</span></a></td></tr>'
         for c in codes)
-    trn = f'<p class="note">{p["transfer_note"]} <a href="transfer.html">How transfer works</a>.</p>' if p.get("transfer_note") else ""
+    trn = f'<p class="note">{p["transfer_note"]} <a href="#tr-h">Transfer options</a>.</p>' if p.get("transfer_note") else ""
     software_extra = ""
     if p["key"] == "software":
         software_extra = f'''<section class="tight" aria-labelledby="how-h"><div class="wrap prose">
@@ -277,46 +323,57 @@ def build_path(p):
   <p>Noncredit classes use a separate, shorter application. <a href="{S.COD}/students/admissions/noncredit/">Register for noncredit at COD</a>.</p>
   <p>Ready for more? Credit courses like {course_link("101")} (Photoshop), {course_link("102")} (Illustrator), and {course_link("120")} (Premiere Pro) count toward degrees and certificates.</p>
 </div></section>'''
+    pnav = "".join(f'<li><a href="#{i}">{t}</a></li>' for i, t in [("start-h", "Start here"), ("prog-h", "Programs"), ("learn-h", "What you&#39;ll learn"), ("crs-h", "Courses"), ("car-h", "Careers"), ("tr-h", "Transfer")])
     body = f'''<div class="phero c-{p["color"]}"><div class="wrap">
-  <div>
+  <div class="pt">
     {crumbs([("Home", "index.html"), ("Programs", "programs.html"), (p["name"], None)])}
     <h1>{p["name"]}</h1>
     {f'<p class="unique">{p["unique"]}</p>' if p.get("unique") else ""}
     <p class="lede">{p["intro"]}</p>
-    {jobs}
-    <nav class="jump" aria-label="On this page"><ul><li><a href="#prog-h">Programs</a></li><li><a href="#crs-h">Courses</a></li><li><a href="#car-h">Careers</a></li><li><a href="#tr-h">Transfer</a></li></ul></nav>
+    <p class="jobs-line"><strong>Careers:</strong> {p["jobs"]}</p>
   </div>
-  {aside}
+  <div class="pa">{bloom_art()}{aside}</div>
 </div></div>
+<nav class="pnav c-{p["color"]}" aria-label="Sections of this page"><div class="wrap"><span class="dot" aria-hidden="true"></span><ul>{pnav}</ul></div></nav>
 
 <section aria-labelledby="start-h"><div class="wrap here">
   <div>
-    <h2 class="h2" id="start-h">Start with {sc}</h2>
-    <p class="sub" style="margin:0">{st_course[5]} It counts toward the programs on this path, so you can try the field before you commit.</p>
+    <h2 class="h2" id="start-h">Start here: {sc}</h2>
+    <p class="sub" style="margin:0 0 1rem">{st_course[5]} It counts toward the programs on this path, so you can try the field before you commit.</p>
   </div>
   <div class="ticket">
     <p class="code">{sc}</p>
     <p class="t">{st}, {"noncredit" if st_course[1]=="0" else st_course[1]+" units"}</p>
-    <ul class="chips"><li>{trtext}</li>{"<li>COD GE Area "+st_course[3]+"</li>" if st_course[3] else ""}</ul>
-    <a class="btn btn-red" href="{S.sched(start_code)}">Find a {sc} section</a>
+    <ul class="chips"><li>{trtext}</li>{"<li>COD GE Area "+st_course[3]+"</li>" if st_course[3] else ""}<li>No prerequisite</li></ul>
+    {tools(start_code, "Class tools for " + sc)}
   </div>
 </div></section>
 
+{confidence(p, sc)}
+
 {software_extra}
 
-<section class="tight c-{p["color"]}" aria-labelledby="prog-h"><div class="wrap">
+<section class="c-{p["color"]}" aria-labelledby="prog-h"><div class="wrap">
   <h2 class="h2" id="prog-h">Degrees and certificates</h2>
-  <p class="sub">{count_awards(p["awards"]).capitalize()}. Requirements come from the 2026-2027 catalog; the catalog is the official source.</p>
+  <p class="sub">{count_awards(p["awards"]).capitalize()}. Requirements come from the 2026-2027 catalog, the official source.</p>
   <ul class="awards">{"".join(award_card(k) for k in p["awards"])}</ul>
   {trn}
 </div></section>
 
+<section class="tight" aria-labelledby="learn-h"><div class="wrap">
+  <h2 class="h2" id="learn-h">What you&#39;ll learn</h2>
+  <p class="sub">The knowledge, skills, and abilities each program builds. Open a program to see its list.</p>
+  {"".join(ksa_block(k, i == 0) for i, k in enumerate(p["awards"]))}
+</div></section>
+
 <section class="tight" aria-labelledby="crs-h"><div class="wrap">
   <h2 class="h2" id="crs-h">Courses on this path</h2>
-  <p class="sub">Every DDP course used by these programs. Select a course for its description, or use the <a href="courses.html">course finder</a>. Preview a course in the <a href="{S.SYLLABI}">syllabus library</a>.</p>
-  <table class="list"><caption class="sr">DDP courses for {strip(p["name"])}</caption>
-    <thead><tr><th scope="col">Course</th><th scope="col">Title</th><th scope="col">Units</th><th scope="col">Transfers to</th><th scope="col"><span class="sr">Class schedule</span></th></tr></thead>
+  <p class="sub">Every DDP course used by these programs. Three tools help you plan:</p>
+  {tools(None, "Class tools for all DDP courses")}
+  <table class="list crs"><caption class="sr">DDP courses for {strip(p["name"])}</caption>
+    <thead><tr><th scope="col">Course</th><th scope="col">Title</th><th scope="col">Units</th><th scope="col">Transfers to</th><th scope="col">Catalog</th><th scope="col">Schedule</th></tr></thead>
     <tbody>{rows}</tbody></table>
+  <p class="src">Select a course number for a short description in the <a href="courses.html">course finder</a>.</p>
 </div></section>
 
 {path_careers(p)}
@@ -426,7 +483,7 @@ def build_courses():
   <p>{blurb}</p>
   <p class="meta">{"".join(f"<span>{m}</span>" for m in meta)}</p>
   {used_html}
-  <p class="acts"><a href="{S.sched(c)}">Find sections<span class="sr"> of {ddp(c)}</span></a><a href="{S.cat_search(c)}">Catalog entry<span class="sr"> for {ddp(c)}</span></a></p>
+  <p class="acts"><a href="{S.cat_search(c)}"><span class="ic">{ICON["catalog"]}</span>Catalog<span class="sr"> for {ddp(c)}</span></a><a href="{S.sched(c)}"><span class="ic">{ICON["schedule"]}</span>Schedule<span class="sr"> for {ddp(c)}</span></a><a href="{S.SYLLABI}"><span class="ic">{ICON["syllabus"]}</span>Syllabi<span class="sr"> (search for {ddp(c)})</span></a></p>
 </li>''')
     popts = [("all", "All areas")] + [(p["key"], strip(p["name"]).replace("Job-Ready Software Skills", "Noncredit Software")) for p in PATHS] + [("career", "Career &amp; portfolio")]
     pr = "".join(f'<input type="radio" name="area" id="f-{k}" value="{k}"{" checked" if k=="all" else ""}><label for="f-{k}">{n}</label>' for k, n in popts)
@@ -436,7 +493,7 @@ def build_courses():
 <section><div class="wrap">
   <fieldset class="filters"><legend>Career path</legend><div class="opts">{pr}</div></fieldset>
   <fieldset class="filters"><legend>Transfer and general education</legend><div class="opts">{tr}</div></fieldset>
-  <p class="count">Want to see what a class covers before you enroll? Read past syllabi in the <a href="{S.SYLLABI}">COD syllabus library</a>; search by course code. Or <a href="{S.SCHEDULE_DDP}">see every DDP class this term</a>.</p>
+  {tools(None, "Class tools")}
   <ul class="courses" aria-label="DDP courses">{"".join(items)}</ul>
   <p class="src">Source: <a href="{COURSES_URL}">College of the Desert 2026-2027 Catalog, Digital Design &amp; Production courses</a>. Descriptions are shortened; the catalog lists prerequisites, advisories, and hours.</p>
 </div></section>'''

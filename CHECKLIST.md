@@ -20,6 +20,8 @@ Last updated: October 20, 2026. Check items off as they are confirmed.
 - [ ] Noncredit classes are free and repeatable (catalog: "Repeatable: Yes"). Confirm the "free" claim with the noncredit office.
 
 ## Site content to confirm (October 20 build)
+- [ ] **KSAs (Knowledge, Skills, Abilities) for all 17 programs** in `src/ksa.py`: drafted from catalog course descriptions and learning outcomes. Faculty in each area should review and edit.
+- [ ] Encouragement band claims: start courses have no prerequisite (catalog: DDP 100, 120, 131, 151, 200, 301A); most 3-unit DDP courses include 54 lab hours (catalog)
 - [x] Foundations for Accessibility: the only certificate of its kind at a California community college, and can be completed online (stated by Gary, October 20). Featured on the homepage tile, Programs page, Accessibility page, and certificate card. Keep a source on file (for example, a Chancellor's Office program inventory search) in case anyone asks.
 - [ ] Career titles listed for each path
 - [ ] "Noncredit classes are tuition-free" (California noncredit has no enrollment fee; confirm wording with the noncredit office)

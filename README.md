@@ -43,6 +43,7 @@ Content lives in data files, so most updates are a one-line edit. Course require
 | File | What it holds |
 |---|---|
 | `src/programs.py` | Six career paths, 17 awards, 46 DDP courses, advisor, and local career pay data |
+| `src/ksa.py` | Knowledge, Skills, and Abilities for each of the 17 programs (draft for faculty review) |
 | `src/site_data.py` | COD links, navigation, people, and the text of the supporting pages |
 | `src/style.css` | All styles (copied to `docs/css/style.css` on build) |
 | `build.py` | Builds every page into `docs/`: run `python3 build.py` |
