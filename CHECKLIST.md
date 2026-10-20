@@ -3,6 +3,8 @@
 Last updated: October 20, 2026. Check items off as they are confirmed.
 
 ## Decisions for Gary
+- [x] Navigation simplified (October 20): Programs, Get Started, Student Work, Contact. Course finder, Careers, and Transfer live under Programs; each program page has its own Courses, Careers, and Transfer sections.
+- [x] Program titles in Title Case (October 20)
 - [x] Homepage direction: C, Creative Careers (red and gold frame, desert-bloom path colors, light/dark switch). Chosen October 20.
 - [ ] Where the site will live: GitHub Pages linked from COD, or ported into COD's website system (OmniUpdate)
 - [ ] COD brand guide from the Public Information Office (logo files, official colors, web typeface). The Campus Standards Handbook (2005) covers signage only: Neutraface type, desert-flora color coding.
@@ -21,7 +23,7 @@ Last updated: October 20, 2026. Check items off as they are confirmed.
 - [ ] Career titles listed for each path
 - [ ] "Noncredit classes are tuition-free" (California noncredit has no enrollment fee; confirm wording with the noncredit office)
 - [ ] Software access for students: Adobe Creative Cloud licenses and lab hours (placeholder on Student Resources)
-- [ ] Gary Graves: COD email for the Contact page
+- [x] Gary Graves: ggraves@collegeofthedesert.edu, on Contact and as student work gallery curator (October 20)
 - [ ] Spanish version of every page (next phase)
 
 ## Links added October 20 (from Gary)

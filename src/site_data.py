@@ -18,10 +18,12 @@ PREVIEW = ('Design preview for faculty review. Not the official site. '
 TOP_LINKS = [("Apply", COD + "/students/admissions/"), ("Class Schedule", SCHEDULE),
              ("Catalog", CATALOG), ("Financial Aid", COD + "/students/fin-aid/")]
 
-NAV = [("programs", "Programs", "index.html#paths"), ("courses", "Courses", "courses.html"),
-       ("careers", "Careers", "careers.html"), ("transfer", "Transfer", "transfer.html"),
-       ("work", "Student Work", "student-work.html"), ("start", "Get Started", "get-started.html"),
-       ("contact", "Contact", "contact.html")]
+NAV = [("programs", "Programs", "programs.html"), ("start", "Get Started", "get-started.html"),
+       ("work", "Student Work", "student-work.html"), ("contact", "Contact", "contact.html")]
+
+# Second-level links shown on the Programs, Course finder, Careers, and Transfer pages
+SUBNAV = [("programs.html", "All programs"), ("courses.html", "Course finder"),
+          ("careers.html", "Careers &amp; pay"), ("transfer.html", "Transfer")]
 
 L = {  # COD services
  "admissions": COD + "/students/admissions/",
@@ -33,6 +35,7 @@ L = {  # COD services
  "counseling": COD + "/students/counseling/default.php",
  "career": COD + "/students/cwsc/",
  "career_fairs": COD + "/students/cwsc/job-career-fair.php",
+ "handshake": "https://collegeofthedesert.joinhandshake.com/login",
  "transfer": COD + "/students/transfer-center/",
  "tutoring": COD + "/students/asc/",
  "library": COD + "/students/library/",
@@ -62,7 +65,7 @@ STEPS = [
  ("Apply to COD", "Admission is free. Already a student? Make a DDP program your major.",
   f'Apply online through COD Admissions; there is no application fee. If you already take classes at COD, ask Counseling to update your major so your education plan matches your goal. <a href="{L["admissions"]}">Apply to COD</a>'),
  ("Take a start course", "DDP 100, or the first course on your path. It counts toward your award.",
-  'Each career path lists one start course. It counts toward that path&#39;s certificates and degrees, so nothing is wasted while you decide. Not sure which path? Take DDP 100. <a href="index.html#paths">Compare the career paths</a>'),
+  'Each career path lists one start course. It counts toward that path&#39;s certificates and degrees, so nothing is wasted while you decide. Not sure which path? Take DDP 100. <a href="programs.html">Compare the programs</a>'),
  ("Plan with the advisor", "Map your semesters with Mari Abril, DDP program advisor, and a counselor.",
   f'Meet with {ADVISOR["name"]}, the DDP program advisor, about classes and portfolios, and with a counselor for a full education plan, including general education and transfer. <a href="{L["counseling"]}">Make a counseling appointment</a>'),
  ("Build and apply", "Finish your portfolio in DDP 195, then apply for your certificate or degree.",
@@ -71,7 +74,7 @@ STEPS = [
 
 PEOPLE = [
  dict(name="Mari Abril", role="Program Advisor, Digital Design &amp; Production", email="mabril@collegeofthedesert.edu", phone="760.674.5684"),
- dict(name="Gary Graves", role="Faculty. Teaches DDP 106 Generative AI for Creatives and DDP 195 Business Practices and Portfolio Preparation", email="", phone=""),
+ dict(name="Gary Graves", role="Faculty and student work gallery curator. Teaches DDP 106 Generative AI for Creatives and DDP 195 Business Practices and Portfolio Preparation", email="ggraves@collegeofthedesert.edu", phone=""),
 ]
 
 def initials(n): return "".join(w[0] for w in n.split()[:2])
@@ -84,7 +87,7 @@ def pages(pay_section, course_link):
     rows = "".join(f'<tr><td>{JOBS[k][0]}</td><td>{JOBS[k][2]}</td><td>{JOBS[k][3]}</td><td>{JOBS[k][1]}</td><td>{"Usually" if JOBS[k][4] else "Not always"}</td></tr>'
                    for k in ["graphic", "designer", "marketing", "webdev", "animator", "artdir"])
     path_rows = "".join(f'<li><a href="{p["file"]}"><b>{p["name"]}</b><span>{p["jobs"]}</span></a></li>' for p in PATHS)
-    out.append(dict(file="careers.html", section="careers", title="Creative careers",
+    out.append(dict(file="careers.html", section="programs", title="Creative careers",
       lede="What DDP graduates do, what the work pays in the Inland Empire and Coachella Valley, and how to build experience while you study.",
       body=f'''<section><div class="wrap">
   <h2 class="h2">Careers by path</h2>
@@ -106,7 +109,7 @@ def pages(pay_section, course_link):
     <li><a href="courses.html#ddp-195"><b>DDP 195: Business Practices and Portfolio Preparation</b><span>Freelancing, pricing, clients, contracts, taxes, and a professional portfolio.</span></a></li>
     <li><a href="courses.html#ddp-128"><b>DDP 128: Portfolio Preparation</b><span>Online portfolio, artist statement, CV, and a public exhibition of student work.</span></a></li>
     <li><a href="courses.html#ddp-095a"><b>DDP 095A: Work Experience</b><span>Earn 1 to 5 units for a design job or internship you already have.</span></a></li>
-    <li><a href="software.html"><b>Adobe Certified exams</b><span>Tuition-free noncredit classes prepare you for certification in five Adobe apps.</span></a></li>
+    <li><a href="{L["handshake"]}"><b>Find jobs and internships on Handshake</b><span>COD&#39;s job board for students and alumni. Sign in with your COD account.</span></a></li>
     <li><a href="{L["career"]}"><b>Career and Workforce Solutions Center</b><span>Career counseling, resumes, assessments, and job and career fairs.</span></a></li>
     <li><a href="{L["entr"]}"><b>Start your own creative business</b><span>Pair DDP with COD&#39;s Entrepreneurship (ENTR) courses.</span></a></li>
   </ul>
@@ -117,7 +120,7 @@ def pages(pay_section, course_link):
     tr_cards = "".join(f'<li><a href="{a["url"]}"><b>{a["name"]} {a["kind"]}</b><span>{a["desc"]} {a["units"]} units, with {a["ge"]}.</span></a></li>' for a in (AWARDS[k] for k in tr_awards))
     uc = [c for c, v in COURSES.items() if "UC" in v[2]]
     csu = [c for c, v in COURSES.items() if "CSU" in v[2]]
-    out.append(dict(file="transfer.html", section="transfer", title="Transfer to a four-year school",
+    out.append(dict(file="transfer.html", section="programs", title="Transfer to a four-year school",
       lede="Start your bachelor&#39;s degree in design at COD. Two DDP degrees are built for transfer, and most DDP courses transfer to the CSU.",
       body=f'''<section><div class="wrap">
   <h2 class="h2">Transfer degrees</h2>
@@ -198,6 +201,7 @@ def pages(pay_section, course_link):
     <li><a href="{L["tutoring"]}"><b>Academic Skills Center</b><span>Free tutoring.</span></a></li>
     <li><a href="{L["library"]}"><b>Library</b><span>Research help, study space, and computers.</span></a></li>
     <li><a href="{L["career"]}"><b>Career center</b><span>Resumes, career counseling, and job fairs.</span></a></li>
+    <li><a href="{L["handshake"]}"><b>Handshake</b><span>Jobs and internships for COD students.</span></a></li>
     <li><a href="{L["dsps"]}"><b>DSPS</b><span>Accommodations for students with disabilities.</span></a></li>
   </ul>
 </div></section>'''))
@@ -221,7 +225,7 @@ def pages(pay_section, course_link):
 </div></section>
 <section class="pay-wrap"><div class="wrap prose">
   <h2 class="h2">Share your work</h2>
-  <p>DDP students can submit finished pieces for this gallery. Ask your instructor to nominate a piece, or email the program advisor at <a href="mailto:{ADVISOR["email"]}">{ADVISOR["email"]}</a>. Every piece needs a signed release, and you choose how your name appears.</p>
+  <p>DDP students can submit finished pieces for this gallery. Ask your instructor to nominate a piece, or email the gallery curator, Prof. Gary Graves, at <a href="mailto:ggraves@collegeofthedesert.edu">ggraves@collegeofthedesert.edu</a>. Every piece needs a signed release, and you choose how your name appears.</p>
 </div></section>'''))
 
     # ---------------- Contact ----------------

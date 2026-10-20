@@ -119,11 +119,16 @@ def crumbs(items):
     lis = "".join(f'<li><a href="{u}">{t}</a></li>' if u else f'<li aria-current="page">{t}</li>' for t, u in items)
     return f'<nav class="crumbs" aria-label="Breadcrumb"><ol>{lis}</ol></nav>'
 
-def simple_hero(title, lede, trail):
+def subnav(current):
+    items = "".join(f'<li><a href="{u}"{" aria-current=\"page\"" if u == current else ""}>{t}</a></li>' for u, t in S.SUBNAV)
+    return f'<nav class="subnav" aria-label="Programs section"><ul>{items}</ul></nav>'
+
+def simple_hero(title, lede, trail, sub=None):
     return f'''<div class="field"><div class="wrap">
   {crumbs(trail)}
   <h1>{title}</h1>
   <p class="lede">{lede}</p>
+  {subnav(sub) if sub else ""}
 </div></div>'''
 
 def pay_line(key):
@@ -149,7 +154,7 @@ def tile(p, cls):
     extra = '<p class="wage">Or transfer to a four-year design program with the Design Studies AA.</p>' if p["key"] == "design" else ""
     free = ' <span class="badge">Free</span>' if p["key"] == "software" else ""
     jobs = p["jobs"] if p["key"] != "software" else "Adobe Certified skills in Photoshop, Illustrator, InDesign, Premiere Pro, and After Effects. Noncredit, no experience needed."
-    fl = FLOWER if p["key"] in ("design", "motion") else ""
+    fl = FLOWER
     return (f'<li class="{cls} c-{p["color"]}">{fl}<div><h2><a href="{p["file"]}">{p["name"]}</a>{free}</h2>'
             f'<p class="jobs">{jobs}</p>{wage}{extra}</div>'
             f'<p class="start"><span>Start with <b>{p["start"][0]}</b></span><span>{count_awards(p["awards"])}</span></p></li>')
@@ -157,27 +162,23 @@ def tile(p, cls):
 def build_home():
     tiles = "".join(tile(p, "t-" + p["key"]) for p in PATHS)
     s = S.HOME
-    body = f'''<div class="field home" id="paths"><div class="wrap">
-  <h1>{s["h1"]}</h1>
-  <p class="lede">{s["lede"]}</p>
+    n100 = sum(1 for a in AWARDS.values() if "100" in a["core"])
+    body = f'''<div class="field home" id="paths"><div class="wrap hero-grid">
+  <div>
+    <h1>{s["h1"]}</h1>
+    <p class="lede">{s["lede"]}</p>
+  </div>
+  <aside class="mini" aria-labelledby="here-h">
+    <h2 id="here-h">Exploring? Start with DDP 100.</h2>
+    <p>Introduction to Digital Art &amp; Media samples every program. Open to everyone, transfers to CSU and UC, counts for COD GE Area A3, and is required for {n100} DDP programs.</p>
+    <a class="btn btn-gold" href="{S.sched("100")}">Find a DDP 100 section</a>
+  </aside>
 </div></div>
 <div class="tiles"><div class="wrap">
+  <h2 class="sr">Programs by career path</h2>
   <ul class="blooms">{tiles}</ul>
-  <p class="src">Pay: {JOBS_SOURCE} The metro includes the Coachella Valley. Animators usually need a bachelor's degree.</p>
+  <p class="src">Pay: {JOBS_SOURCE} The metro includes the Coachella Valley. Animators usually need a bachelor's degree. <a href="programs.html">Compare all programs</a>.</p>
 </div></div>
-
-<section aria-labelledby="here-h"><div class="wrap here">
-  <div>
-    <h2 class="h2" id="here-h">Exploring? Start with DDP 100.</h2>
-    <p class="sub" style="margin:0">Introduction to Digital Art &amp; Media samples every career path: imaging, illustration, layout, animation, 3D, and new tools. It's open to everyone.</p>
-  </div>
-  <div class="ticket">
-    <p class="code">DDP 100</p>
-    <p class="t">Introduction to Digital Art &amp; Media, 3 units</p>
-    <ul class="chips"><li>Transfers to CSU and UC</li><li>COD GE Area A3</li><li>C-ID ARTS 250</li><li>Required for {sum(1 for a in AWARDS.values() if "100" in a["core"])} DDP programs</li></ul>
-    <a class="btn btn-red" href="{S.sched("100")}">Find a DDP 100 section</a>
-  </div>
-</div></section>
 
 <section class="tight" aria-label="More ways in"><div class="wrap two">
   <article class="panel-gold"><h3>Adobe classes that cost nothing</h3><p>Noncredit classes are tuition-free, need no experience, and can be repeated. Finish part A and part B to earn a Certificate of Completion and prepare for the Adobe Certified exam.</p><a href="software.html">How noncredit works</a></article>
@@ -258,10 +259,11 @@ def build_path(p):
 </div></section>'''
     body = f'''<div class="phero c-{p["color"]}"><div class="wrap">
   <div>
-    {crumbs([("Home", "index.html"), ("Careers &amp; programs", "index.html#paths"), (p["name"], None)])}
+    {crumbs([("Home", "index.html"), ("Programs", "programs.html"), (p["name"], None)])}
     <h1>{p["name"]}</h1>
     <p class="lede">{p["intro"]}</p>
     {jobs}
+    <nav class="jump" aria-label="On this page"><ul><li><a href="#prog-h">Programs</a></li><li><a href="#crs-h">Courses</a></li><li><a href="#car-h">Careers</a></li><li><a href="#tr-h">Transfer</a></li></ul></nav>
   </div>
   {aside}
 </div></div>
@@ -282,7 +284,7 @@ def build_path(p):
 {software_extra}
 
 <section class="tight c-{p["color"]}" aria-labelledby="prog-h"><div class="wrap">
-  <h2 class="h2" id="prog-h">Programs</h2>
+  <h2 class="h2" id="prog-h">Degrees and certificates</h2>
   <p class="sub">{count_awards(p["awards"]).capitalize()}. Requirements come from the 2026-2027 catalog; the catalog is the official source.</p>
   <ul class="awards">{"".join(award_card(k) for k in p["awards"])}</ul>
   {trn}
@@ -296,20 +298,83 @@ def build_path(p):
     <tbody>{rows}</tbody></table>
 </div></section>
 
-<section class="pay-wrap" aria-labelledby="build-h"><div class="wrap">
-  <h2 class="h2" id="build-h">Build your career while you study</h2>
-  <ul class="links">
-    <li><a href="courses.html#ddp-195"><b>DDP 195</b><span>Business practices and portfolio preparation: freelancing, pricing, clients, and your portfolio.</span></a></li>
-    <li><a href="courses.html#ddp-095a"><b>DDP 095A</b><span>Earn units for a design job or internship.</span></a></li>
-    <li><a href="student-work.html"><b>Student work</b><span>See what DDP students make, and share your own.</span></a></li>
-  </ul>
-</div></section>
+{path_careers(p)}
+
+{path_transfer(p, codes)}
 
 <section aria-labelledby="oth-h"><div class="wrap">
-  <h2 class="h2" id="oth-h">Explore other career paths</h2>
+  <h2 class="h2" id="oth-h">Explore other programs</h2>
   <ul class="others">{others}</ul>
 </div></section>'''
     return page(p["file"], strip(p["name"]), body, "programs", p["intro"])
+
+
+def path_careers(p):
+    rows = "".join(f'<tr><td>{JOBS[k][0]}</td><td>{JOBS[k][2]}</td><td>{JOBS[k][3]}</td><td>{"Usually" if JOBS[k][4] else "Not always"}</td></tr>' for k in p["pay"])
+    table = (f'''<table class="list"><caption class="sr">Median pay for {strip(p["name"])} careers</caption>
+    <thead><tr><th scope="col">Job</th><th scope="col">Hourly</th><th scope="col">Yearly</th><th scope="col">Bachelor&#39;s degree needed?</th></tr></thead>
+    <tbody>{rows}</tbody></table>
+  <p class="src">Median pay, {JOBS_SOURCE}</p>''') if rows else '<p class="ph">Local pay data for these jobs is coming.</p>'
+    return f'''<section class="pay-wrap" aria-labelledby="car-h"><div class="wrap">
+  <h2 class="h2" id="car-h">Careers</h2>
+  <p class="sub"><strong>Jobs this path leads to:</strong> {p["jobs"]}.</p>
+  {table}
+  <ul class="links four" style="margin-top:2rem">
+    <li><a href="courses.html#ddp-195"><b>DDP 195</b><span>Business practices and portfolio preparation: freelancing, pricing, clients, and your portfolio.</span></a></li>
+    <li><a href="courses.html#ddp-095a"><b>DDP 095A</b><span>Earn units for a design job or internship.</span></a></li>
+    <li><a href="{S.L["handshake"]}"><b>Find jobs on Handshake</b><span>Jobs and internships for COD students. Sign in with your COD account.</span></a></li>
+    <li><a href="careers.html"><b>Careers &amp; pay</b><span>All creative careers, local pay, and the career center.</span></a></li>
+  </ul>
+</div></section>'''
+
+def path_transfer(p, codes):
+    tr_awards = [k for k in p["awards"] if AWARDS[k].get("transfer")]
+    csu = [c for c in codes if "CSU" in COURSES[c][2]]
+    uc = [c for c in codes if "UC" in COURSES[c][2]]
+    if p["key"] == "software":
+        body = "<p>Noncredit classes do not earn transfer credit. When you are ready, credit courses like " + course_link("101") + " and " + course_link("102") + " count toward degrees and transfer to the CSU.</p>"
+    else:
+        lead = ""
+        if tr_awards:
+            joined = " and ".join(f'the <a href="#{k}">{AWARDS[k]["name"]} {AWARDS[k]["kind"]}</a>' for k in tr_awards)
+            lead = "<p>" + joined[0].upper() + joined[1:] + (" are" if len(tr_awards) > 1 else " is") + " built for transfer, using Cal-GETC general education.</p>"
+        body = lead + f"<p>{len(csu)} of the {len(codes)} DDP courses on this path transfer to the CSU, and {len(uc)} also transfer to the UC. Each university decides which courses count toward its major, so check <a href=\"{S.L['assist']}\">ASSIST.org</a> and meet with a counselor.</p>"
+    return f'''<section class="tight" aria-labelledby="tr-h" style="padding-top:clamp(2.75rem,6vw,4.5rem)"><div class="wrap prose">
+  <h2 class="h2" id="tr-h">Transfer</h2>
+  {body}
+  <p><a href="transfer.html">How transfer works</a></p>
+</div></section>'''
+
+# ---------------------------------------------------------------------------
+def build_programs():
+    rows = []
+    for p in PATHS:
+        aw = "".join(f'<li><a href="{p["file"]}#{k}"><span class="k">{AWARDS[k]["kind"] if AWARDS[k]["kind"]!="CC" else "Noncredit"}</span>{AWARDS[k]["name"]}</a></li>' for k in p["awards"])
+        rows.append(f'''<li class="prog c-{p["color"]}">
+  <div class="sw" aria-hidden="true"></div>
+  <div class="pi">
+    <h2><a href="{p["file"]}">{p["name"]}</a></h2>
+    <p>{p["pitch"]}</p>
+    <p class="meta"><span>Start with <b>{p["start"][0]}</b></span><span>{count_awards(p["awards"])}</span></p>
+  </div>
+  <ul class="aw" aria-label="Degrees and certificates in {strip(p["name"])}">{aw}</ul>
+</li>''')
+    key = "".join(f"<li><b>{k}</b> {v}</li>" for k, v in [("AA / AS", "Associate degree"), ("CA", "Certificate of Achievement"), ("Noncredit", "Certificate of Completion, tuition-free")])
+    body = simple_hero("Programs", f"Six career paths and {len(AWARDS)} degrees and certificates. Pick a path to see its programs, courses, careers, and transfer options.",
+                       [("Home", "index.html"), ("Programs", None)], "programs.html") + f'''
+<section><div class="wrap">
+  <ul class="progs">{"".join(rows)}</ul>
+  <ul class="key" aria-label="Award types">{key}</ul>
+</div></section>
+<section class="pay-wrap"><div class="wrap">
+  <h2 class="h2">Not sure where to start?</h2>
+  <ul class="links">
+    <li><a href="{S.sched("100")}"><b>Take DDP 100</b><span>Introduction to Digital Art &amp; Media samples every path. Open to everyone; transfers to CSU and UC.</span></a></li>
+    <li><a href="courses.html"><b>Browse every course</b><span>Filter all {len(COURSES)} DDP courses by path, transfer, and general education.</span></a></li>
+    <li><a href="contact.html"><b>Talk with the program advisor</b><span>{ADVISOR["name"]}, {ADVISOR["email"]}</span></a></li>
+  </ul>
+</div></section>'''
+    return page("programs.html", "Programs", body, "programs", "Digital Design &amp; Production programs at College of the Desert by career path.")
 
 # ---------------------------------------------------------------------------
 def build_courses():
@@ -334,11 +399,11 @@ def build_courses():
   {used_html}
   <p class="acts"><a href="{S.sched(c)}">Find sections<span class="sr"> of {ddp(c)}</span></a><a href="{S.cat_search(c)}">Catalog entry<span class="sr"> for {ddp(c)}</span></a></p>
 </li>''')
-    popts = [("all", "All areas")] + [(p["key"], strip(p["name"]).replace("Job-ready software skills", "Noncredit software")) for p in PATHS] + [("career", "Career &amp; portfolio")]
+    popts = [("all", "All areas")] + [(p["key"], strip(p["name"]).replace("Job-Ready Software Skills", "Noncredit Software")) for p in PATHS] + [("career", "Career &amp; portfolio")]
     pr = "".join(f'<input type="radio" name="area" id="f-{k}" value="{k}"{" checked" if k=="all" else ""}><label for="f-{k}">{n}</label>' for k, n in popts)
     tr = "".join(f'<input type="radio" name="tr" id="t-{k}" value="{k}"{" checked" if k=="any" else ""}><label for="t-{k}">{n}</label>' for k, n in
                  [("any", "Any"), ("csu", "Transfers to CSU"), ("uc", "Transfers to UC"), ("ge", "Counts for COD GE")])
-    body = f'''{simple_hero("Course finder", f"All {len(COURSES)} DDP courses in the 2026-2027 catalog. Filter by career path or by transfer, then find open sections in the class schedule.", [("Home","index.html"),("Courses",None)])}
+    body = f'''{simple_hero("Course finder", f"All {len(COURSES)} DDP courses in the 2026-2027 catalog. Filter by career path or by transfer, then find open sections in the class schedule.", [("Home","index.html"),("Programs","programs.html"),("Course finder",None)], "courses.html")}
 <section><div class="wrap">
   <fieldset class="filters"><legend>Career path</legend><div class="opts">{pr}</div></fieldset>
   <fieldset class="filters"><legend>Transfer and general education</legend><div class="opts">{tr}</div></fieldset>
@@ -346,16 +411,20 @@ def build_courses():
   <ul class="courses" aria-label="DDP courses">{"".join(items)}</ul>
   <p class="src">Source: <a href="{COURSES_URL}">College of the Desert 2026-2027 Catalog, Digital Design &amp; Production courses</a>. Descriptions are shortened; the catalog lists prerequisites, advisories, and hours.</p>
 </div></section>'''
-    return page("courses.html", "Course finder", body, "courses", "Find DDP courses by career path, transfer, and general education.")
+    return page("courses.html", "Course finder", body, "programs", "Find DDP courses by career path, transfer, and general education.")
 
 # ---------------------------------------------------------------------------
 def build_content(pg):
-    body = simple_hero(pg["title"], pg["lede"], [("Home", "index.html"), (pg["title"], None)]) + pg["body"]
+    if pg.get("section") == "programs":
+        hero = simple_hero(pg["title"], pg["lede"], [("Home", "index.html"), ("Programs", "programs.html"), (pg["title"], None)], pg["file"])
+    else:
+        hero = simple_hero(pg["title"], pg["lede"], [("Home", "index.html"), (pg["title"], None)])
+    body = hero + pg["body"]
     return page(pg["file"], pg["title"], body, pg.get("section"), pg["lede"])
 
 def build():
     shutil.copy(os.path.join(ROOT, "src", "style.css"), os.path.join(OUT, "css", "style.css"))
-    made = [build_home(), build_courses()]
+    made = [build_home(), build_programs(), build_courses()]
     made += [build_path(p) for p in PATHS]
     for pg in S.pages(pay_section, course_link):
         made.append(build_content(pg))

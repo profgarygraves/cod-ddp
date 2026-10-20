@@ -28,7 +28,8 @@ Open questions and facts to confirm are in [CHECKLIST.md](CHECKLIST.md).
 
 | Page | File |
 |---|---|
-| Homepage: six career paths, start course, four steps, pay | `index.html` |
+| Homepage: six career paths, DDP 100, four steps, pay | `index.html` |
+| Programs overview: every path and award, with links to Course finder, Careers, Transfer | `programs.html` |
 | Career paths | `design.html`, `motion.html`, `photo.html`, `interactive.html`, `digital-accessibility.html`, `software.html` |
 | Course finder (filters by path, CSU, UC, GE; works without JavaScript) | `courses.html` |
 | Careers, Transfer, Get started, Student resources | `careers.html`, `transfer.html`, `get-started.html`, `resources.html` |

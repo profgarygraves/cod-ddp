@@ -19,7 +19,7 @@
   --chip:#FFF0C2; --chip-ink:#3a2a00;
   --display:"Jost","Futura","Century Gothic",system-ui,sans-serif;
   --body:"Roboto","Helvetica Neue",Arial,sans-serif;
-  --wrap:1180px; --gut:clamp(16px,4vw,40px); --r:18px 18px 18px 4px;
+  --wrap:1360px; --gut:clamp(16px,4vw,40px); --r:18px 18px 18px 4px;
   color-scheme:light;
 }
 @media (prefers-color-scheme:dark){:root:not(:has(#th-light:checked)){
@@ -303,3 +303,62 @@ body:has(#t-ge:checked) .course:not([data-ge]){display:none}
 .person p,.links span,.dept-foot p{overflow-wrap:anywhere}
 .course .acts{display:flex;flex-wrap:wrap;gap:.25rem 1.1rem;margin:.6rem 0 0;font-size:.9rem;font-weight:500}
 .course .acts a{display:inline-block;padding:.15rem 0}
+
+/* ===== October 20 revision: wider layout, even tiles, Programs-first navigation ===== */
+/* Home hero: headline left, DDP 100 card right */
+.hero-grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:1.5rem 3rem;align-items:end}
+.field.home h1{font-size:clamp(2.4rem,5.2vw,4.8rem)}
+.mini{background:rgba(0,0,0,.18);border:2px solid var(--gold);border-radius:var(--r);padding:1.4rem 1.5rem}
+.mini h2{font-size:1.45rem;line-height:1.15;margin:0 0 .5rem;color:#fff}
+.mini p{margin:0 0 1rem;color:#fff;font-size:.97rem}
+.btn-gold{background:var(--gold);color:#241a00}
+.btn-gold:hover{background:#fff}
+
+/* Even 3 x 2 tile grid: every program gets the same size, so no tile sits half empty */
+.blooms{grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-rows:auto}
+.blooms li{grid-column:auto!important;grid-row:auto!important;min-height:220px}
+.blooms h2,.t-design h2{font-size:clamp(1.4rem,2vw,1.85rem)}
+
+/* Programs sub-navigation (Programs, Course finder, Careers, Transfer) */
+.subnav{margin-top:1.75rem}
+.subnav ul{list-style:none;display:flex;flex-wrap:wrap;gap:.5rem;margin:0;padding:0}
+.subnav a{display:inline-block;padding:.5rem 1rem;border-radius:999px;border:2px solid rgba(255,255,255,.75);color:#fff;text-decoration:none;font-weight:500}
+.subnav a:hover{background:rgba(255,255,255,.15)}
+.subnav a[aria-current]{background:var(--gold);border-color:var(--gold);color:#241a00}
+
+/* Jump links on program pages */
+.jump{margin-top:1.25rem}
+.jump ul{list-style:none;display:flex;flex-wrap:wrap;gap:.45rem;margin:0;padding:0}
+.jump a{display:inline-block;padding:.4rem .9rem;border-radius:999px;border:2px solid currentColor;color:inherit;text-decoration:none;font-weight:500;font-size:.95rem}
+.jump a:hover{background:rgba(0,0,0,.08)}
+
+/* Programs overview */
+.progs{list-style:none;margin:0;padding:0;display:grid;gap:1rem}
+.prog{display:grid;grid-template-columns:10px minmax(0,1fr) minmax(0,1.15fr);gap:0 1.75rem;border:1px solid var(--line);border-radius:4px;background:var(--bg);overflow:hidden}
+.prog .sw{background:var(--p-bg);border-right:1px solid var(--line)}
+.prog.c-white .sw{background:var(--red)}
+.prog .pi{padding:1.25rem 0}
+.prog h2{font-size:clamp(1.4rem,2.2vw,1.8rem);line-height:1.15;margin:0 0 .4rem}
+.prog h2 a{color:var(--ink);text-decoration:none}
+.prog h2 a:hover{color:var(--link);text-decoration:underline}
+.prog p{margin:0 0 .6rem;color:var(--muted)}
+.prog .meta{display:flex;flex-wrap:wrap;gap:.3rem 1.25rem;font-size:.92rem;color:var(--ink)}
+.prog .aw{list-style:none;margin:0;padding:1.1rem 1.25rem 1.1rem 0;display:grid;gap:.35rem;align-content:center}
+.prog .aw a{display:flex;gap:.6rem;align-items:baseline;color:var(--ink);text-decoration:none;padding:.2rem 0}
+.prog .aw a:hover{color:var(--link);text-decoration:underline}
+.prog .aw .k{flex:none;min-width:5.6rem;font-size:.75rem;font-weight:600;background:var(--chip);color:var(--chip-ink);border-radius:999px;padding:.2rem .5rem;text-align:center}
+.key{list-style:none;display:flex;flex-wrap:wrap;gap:.4rem 1.5rem;margin:1.25rem 0 0;padding:0;font-size:.9rem;color:var(--muted)}
+.key b{color:var(--ink);font-weight:500;margin-right:.3rem}
+
+@media (max-width:960px){
+  .hero-grid{grid-template-columns:1fr}
+  .blooms{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .prog{grid-template-columns:10px minmax(0,1fr)}
+  .prog .aw{grid-column:2;padding:0 1.25rem 1.25rem 0}
+}
+@media (max-width:560px){.blooms{grid-template-columns:1fr}.blooms li{min-height:0}}
+.blooms h2{padding-right:3.25rem}
+.field .btn-gold{color:#241a00}
+.links.four{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media (max-width:960px){.links.four{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.links.four{grid-template-columns:1fr}}
