@@ -42,7 +42,10 @@ Last updated: October 20, 2026. Check items off as they are confirmed.
 ## People and places
 - [ ] Program advisor: Mari Abril, mabril@collegeofthedesert.edu, 760.674.5684 (from the 2026-2027 catalog)
 - [x] Faculty & Staff page (October 20): 19 instructors from the Spring, Summer, and Fall 2026 class schedule; titles and emails from the COD directory; Dean Vanessa Fountain, Chair Dr. Mari Abril, and Tina Gonzalez from the School of Social Sciences and Arts page
-- [ ] Faculty headshots (600x750, docs/img/people/first-last.jpg) and LinkedIn links (src/people.py LINKEDIN)
+- [x] Headshots added for Vanessa Fountain, Gary Graves, Kent Kay, Kerri Seichter (AI-edited drafts, published at Gary's direction, October 20)
+- [ ] Headshots for the other faculty and staff (600x750, docs/img/people/first-last.jpg) and LinkedIn links (src/people.py LINKEDIN)
+- [x] Kent Kay listed as Adjunct Faculty (Gary, October 20; directory said "Faculty, Film and Media Studies")
+- [ ] Directory lists Roxanne Brazell, Tina Cleveland-Gorges, Jonathan Gorges, and Jaime Lilly as "Instructor". Confirm: Adjunct Faculty, or full-time?
 - [ ] Confirm faculty who taught only in Spring or Summer 2026 should stay listed: Aaron Baldon, John Goodwin, Kent Kay, Jonathan Gorges
 - [ ] Denise Ferraccioli's directory email is dreilley@collegeofthedesert.edu; confirm
 - [ ] Department office, labs, and campus locations (Palm Desert, Palm Springs temporary campus)

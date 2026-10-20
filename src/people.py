@@ -24,7 +24,7 @@ FACULTY = [
  ("John Goodwin", "jgoodwin@collegeofthedesert.edu", "Adjunct Faculty", ["121"], "Spring 2026"),
  ("Jonathan Gorges", "jgorges@collegeofthedesert.edu", "Instructor", ["201"], "Summer 2026"),
  ("Gary Graves", "ggraves@collegeofthedesert.edu", "Adjunct Faculty; DDP Online Gallery submissions", ["106", "116", "195"], "Spring, Fall 2026"),
- ("Kent Kay", "kkay@collegeofthedesert.edu", "Faculty, Film and Media Studies", ["095A", "120"], "Spring 2026"),
+ ("Kent Kay", "kkay@collegeofthedesert.edu", "Adjunct Faculty", ["095A", "120"], "Spring 2026"),
  ("Maile Klein", "mklein@collegeofthedesert.edu", "Adjunct Faculty", ["131", "133", "135"], "Spring, Summer, Fall 2026"),
  ("Jaime Lilly", "jlilly@collegeofthedesert.edu", "Instructor", ["144", "160"], "Summer, Fall 2026"),
  ("Debra McFadden", "dmcfadden@collegeofthedesert.edu", "Adjunct Faculty", ["102", "110"], "Spring, Fall 2026"),
