@@ -2,6 +2,9 @@
 
 Last updated: October 20, 2026. Check items off as they are confirmed.
 
+## Reviewer feedback
+- [x] November 13: "Salary info is visually too large." The first class now leads on homepage cards and program banners; careers are labeled; pay is one small line that says median, hourly, local or California, with yearly full-time pay on program pages. Careers section renamed "Careers and pay" with a plain explanation of "median."
+
 ## Final audit (October 20, before review)
 - [x] Faculty filter uses each course's home program (catalog); filter buttons only for programs with 2026 instructors
 - [x] All 34 pages: internal links and anchors, HTML validation, one h1 and no skipped headings, image alt text

@@ -224,7 +224,7 @@ def outlook(g):
 
 def jobs_table(keys, caption):
     rows = []
-    hdr = [T("Job", "Empleo"), T("Median pay here", "Salario medio aquí"), T("Jobs in the region", "Empleos en la región"), T("10-year outlook (U.S.)", "Perspectiva a 10 años (EE. UU.)"),
+    hdr = [T("Job", "Empleo"), T("Median pay (local)", "Salario medio (local)"), T("People in this job locally", "Personas con este empleo en la región"), T("10-year outlook (U.S.)", "Perspectiva a 10 años (EE. UU.)"),
            T("Openings per year (U.S.)", "Vacantes por año (EE. UU.)"), T("Self-employed", "Por cuenta propia"), T("Typical entry education", "Estudios típicos para empezar")]
     for k in keys:
         t, n, hr, yr, area, g, o, se, e = JOBS[k]
@@ -253,22 +253,29 @@ def count_awards(keys):
 def kind_short(kind): return kind if kind != "CC" else T("Noncredit", "Sin crédito")
 
 # ---------------------------------------------------------------------------
+def wage_line(key, cls="wage"):
+    hr, t, yr, area = pay_line(key)
+    if LANG == "es":
+        where = "local" if area == "metro" else "en California"
+        return f'<p class="{cls}">Salario medio {where}: <b>{hr}/hora</b> <span>({t.lower()})</span></p>'
+    where = "Local" if area == "metro" else "California"
+    return f'<p class="{cls}">{where} median pay: <b>{hr}/hr</b> <span>({t.lower()})</span></p>'
+
 def tile(p, cls):
-    wage = ""
-    if p["pay"]:
-        hr, t, yr, area = pay_line(p["pay"][0])
-        if LANG == "es":
-            wage = f'<p class="wage"><b>{hr}</b> salario medio de {t.lower()}{" en la región" if area == "metro" else " en California"}</p>'
-        else:
-            wage = f'<p class="wage"><b>{hr}</b> median for {"local " if area == "metro" else ""}{t.lower()}{" in California" if area == "CA" else ""}</p>'
-    extra = f'<p class="wage">{T("Or transfer to a four-year design program with the Design Studies AA.", "O transfiérete a un programa universitario de diseño con el Design Studies AA.")}</p>' if p["key"] == "design" else ""
+    wage = wage_line(p["pay"][0]) if p["pay"] else ""
+    extra = f'<p class="note-t">{T("Or transfer to a four-year design program with the Design Studies AA.", "O transfiérete a un programa universitario de diseño con el Design Studies AA.")}</p>' if p["key"] == "design" else ""
     free = f' <span class="badge">{T("Free", "Gratis")}</span>' if p["key"] == "software" else ""
-    jobs = pf(p, "jobs") if p["key"] != "software" else T("Adobe Certified skills in Photoshop, Illustrator, InDesign, Premiere Pro, and After Effects. Noncredit, no experience needed.",
-                                                       "Habilidades certificables por Adobe en Photoshop, Illustrator, InDesign, Premiere Pro y After Effects. Sin crédito y sin experiencia previa.")
+    if p["key"] == "software":
+        jl, jobs = T("You&#39;ll learn", "Aprenderás"), T("Adobe Certified skills in Photoshop, Illustrator, InDesign, Premiere Pro, and After Effects. Noncredit, no experience needed.",
+                     "Habilidades certificables por Adobe en Photoshop, Illustrator, InDesign, Premiere Pro y After Effects. Sin crédito y sin experiencia previa.")
+    else:
+        jl, jobs = T("Careers", "Carreras"), pf(p, "jobs")
     uniq = f'<p class="unique">{T("Only one in California. Online.", "Único en California. En línea.")}</p>' if p.get("unique") else ""
+    sc, st = p["start"]
     return (f'<li class="{cls} c-{p["color"]}">{FLOWER}<div><h3><a href="{p["file"]}">{pn(p)}</a>{free}</h3>'
-            f'<p class="jobs">{jobs}</p>{wage}{extra}{uniq}</div>'
-            f'<p class="start"><span>{T("Start with", "Empieza con")} <b>{p["start"][0]}</b></span><span>{count_awards(p["awards"])}</span></p></li>')
+            f'<p class="first"><span class="lbl">{T("Start with", "Empieza con")}</span><b>{sc}</b><span class="ct">{st}</span></p>'
+            f'<p class="jobs"><span class="lbl">{jl}</span>{jobs}</p>{extra}{uniq}{wage}</div>'
+            f'<p class="start"><span>{count_awards(p["awards"])}</span></p></li>')
 
 def build_home():
     tiles = "".join(tile(p, "t-" + p["key"]) for p in PATHS)
@@ -397,21 +404,22 @@ def confidence(p, sc):
 
 def build_path(p):
     others = "".join(f'<li class="c-{o["color"]}"><a href="{o["file"]}">{pn(o)}</a></li>' for o in PATHS if o is not p)
-    if p["pay"]:
-        hr, t, yr, area = pay_line(p["pay"][0])
-        if LANG == "es":
-            place = "en el Inland Empire y el Valle de Coachella" if area == "metro" else "en California"
-            aside = f'<aside><p><b>{hr}</b>salario medio por hora de {t.lower()} {place}</p><p><a href="#car-h">Carreras y salarios</a></p></aside>'
-        else:
-            place = "in the Inland Empire and Coachella Valley" if area == "metro" else "in California"
-            aside = f'<aside><p><b>{hr}</b>median hourly pay for {t.lower()} {place}</p><p><a href="#car-h">Careers and pay</a></p></aside>'
-    else:
-        aside = ""
     sc, st = p["start"]
     start_code = sc.replace("DDP ", "")
     st_course = COURSES[start_code]
     trtext = {"CSU/UC": T("Transfers to CSU and UC", "Se transfiere a CSU y UC"), "CSU": T("Transfers to CSU", "Se transfiere a CSU"),
               "": T("Noncredit, tuition-free", "Sin crédito, sin colegiatura") if st_course[1] == "0" else T("Career course", "Curso profesional")}[st_course[2]]
+    if p["pay"]:
+        hr, t, yr, area = pay_line(p["pay"][0])
+        place = (T("in the Inland Empire and Coachella Valley", "en el Inland Empire y el Valle de Coachella") if area == "metro" else T("in California", "en California"))
+        pl = T("Pay in jobs that use these skills", "Salario en empleos que usan estas habilidades") if p["key"] == "software" else T("Typical pay", "Salario típico")
+        payfact = (f'<div><dt>{pl}</dt><dd><b>{hr}{T(" an hour", " por hora")}</b> {T("median for", "mediana de")} {t.lower()} {place} '
+                   f'({T("about", "unos")} {yr} {T("a year full time", "al año a tiempo completo")}). <a href="#car-h">{T("All careers and pay", "Todas las carreras y salarios")}</a></dd></div>')
+    else:
+        payfact = ""
+    meta = (T("Noncredit, tuition-free", "Sin crédito, sin colegiatura") if st_course[1] == "0" else units(st_course[1])) + " &middot; " + T("No prerequisite", "Sin requisito previo")
+    aside = (f'<aside class="first-card"><p class="lbl">{T("Your first class", "Tu primera clase")}</p><p class="code">{sc}</p><p class="t">{st}</p><p class="meta">{meta}</p>'
+             f'<p class="acts"><a class="btn btn-red" href="{S.sched(start_code)}">{T("Find a section", "Busca una sección")}<span class="sr"> {T("of", "de")} {sc}</span></a> <a href="#start-h">{T("How to start", "Cómo empezar")}</a></p></aside>')
     codes = [c for c in COURSES if p["key"] in course_paths(c)]
     rows = "".join(
         f'<tr><td>{course_link(c)}</td><td>{COURSES[c][0]}</td><td>{T("Noncredit", "Sin crédito") if COURSES[c][1]=="0" else units(COURSES[c][1])}</td><td>{COURSES[c][2] or "&nbsp;"}</td>'
@@ -436,9 +444,9 @@ def build_path(p):
     <h1>{pn(p)}</h1>
     {unique}
     <p class="lede">{pf(p, "intro")}</p>
-    <p class="jobs-line"><strong>{T("Careers", "Carreras")}:</strong> {pf(p, "jobs")}</p>
   </div>
   <div class="pa">{bloom_art()}{aside}</div>
+  <dl class="facts"><div><dt>{T("Skills you&#39;ll build", "Habilidades que desarrollarás") if p["key"] == "software" else T("Careers this leads to", "Carreras a las que lleva")}</dt><dd>{pf(p, "jobs")}</dd></div>{payfact}</dl>
 </div></div>
 <nav class="pnav c-{p["color"]}" aria-label="{T("Sections of this page", "Secciones de esta página")}"><div class="wrap"><span class="dot" aria-hidden="true"></span><ul>{pnav}</ul></div></nav>
 
@@ -499,9 +507,10 @@ def path_careers(p):
     emp = "".join(f"<li>{e}</li>" for e in c["employers"])
     sk = "".join(f"<li>{e}</li>" for e in c["skills"])
     return f'''<section class="pay-wrap" aria-labelledby="car-h"><div class="wrap">
-  <h2 class="h2" id="car-h">{T("Careers", "Carreras")}</h2>
+  <h2 class="h2" id="car-h">{T("Careers and pay", "Carreras y salarios")}</h2>
   <p class="sub">{c["work"]}</p>
-  <h3 class="h3">{T("Jobs and pay", "Empleos y salarios")}</h3>
+  <h3 class="h3">{T("Jobs this path prepares you for", "Empleos para los que te prepara esta trayectoria")}</h3>
+  <p class="note" style="margin-top:0">{T("Pay is the median: half of local workers in the job earn more, half earn less. Yearly pay assumes full-time work.", "El salario es la mediana: la mitad de quienes trabajan en ese empleo aquí ganan más y la otra mitad, menos. El salario anual supone trabajo de tiempo completo.")}</p>
   {jobs_table(p["pay"], T("Jobs, pay, and outlook for ", "Empleos, salarios y perspectivas para ") + strip(pn(p)))}
   <p class="src">{T("Pay is the median for the Riverside-San Bernardino-Ontario metro, which includes the Coachella Valley, unless marked California. Outlook, openings, self-employment, and education are national.", "El salario es la mediana del área metropolitana de Riverside-San Bernardino-Ontario, que incluye el Valle de Coachella, salvo donde dice California. Las perspectivas, vacantes, trabajo por cuenta propia y estudios son nacionales.")} {T("Source", "Fuente")}: {jobs_source()}</p>
   <p class="note">{T("&ldquo;Typical entry education&rdquo; is what most people in the job have. Creative employers hire from portfolios, so a COD certificate plus strong work can start your career, and a transfer degree keeps the bachelor&#39;s option open.", "&ldquo;Estudios típicos para empezar&rdquo; es lo que tiene la mayoría de las personas en ese empleo. Los empleadores creativos contratan por el portafolio, así que un certificado de COD y un buen trabajo pueden iniciar tu carrera, y un título de transferencia mantiene abierta la opción de la licenciatura.")} {c["note"]}</p>
